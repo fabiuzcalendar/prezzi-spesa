@@ -75,7 +75,33 @@
           type="search"
           placeholder="Es. Nutella"
           autocomplete="off"
+          list="suggerimentiProdotti"
         >
+
+        <datalist id="suggerimentiProdotti"></datalist>
+
+        <div class="azioni-ricerca-rapida">
+          <button
+            id="mostraTuttiPrezzi"
+            class="secondary-button"
+            type="button"
+          >
+            Mostra tutti
+          </button>
+
+          <button
+            id="pulisciRicercaPrezzi"
+            class="secondary-button"
+            type="button"
+          >
+            Pulisci ricerca
+          </button>
+        </div>
+
+        <div id="ricercheRecenti" class="ricerche-recenti hidden">
+          <p class="ricerche-recenti-titolo">Ricerche recenti</p>
+          <div id="ricercheRecentiLista" class="ricerche-recenti-lista"></div>
+        </div>
 
         <label for="filtroPuntoVendita">
           Punto vendita
@@ -124,6 +150,8 @@
         <p id="conteggioRisultati" class="info-text">
           Scrivi il nome di un prodotto per iniziare.
         </p>
+
+        <p id="riepilogoRicerca" class="riepilogo-ricerca hidden"></p>
       </div>
 
       <div id="risultatiPrezzi"></div>
@@ -150,6 +178,75 @@
           <span class="legenda-colore stato-rosso"></span>
           <span>Rosso: 30 giorni o più</span>
         </div>
+      </div>
+
+    </main>
+
+  </section>
+
+
+  <!-- LISTA DELLA SPESA -->
+  <section id="listaSection" class="pagina hidden">
+
+    <header class="pagina-header">
+      <button id="tornaHomeLista" class="back-button" aria-label="Torna alla home">
+        ←
+      </button>
+
+      <div>
+        <h1>Lista della spesa</h1>
+        <p>Scrivi, spunta e porta con te la lista</p>
+      </div>
+    </header>
+
+    <main>
+
+      <div class="card">
+        <h2>Aggiungi prodotti</h2>
+
+        <label for="listaRapidaInput">
+          Cosa devi comprare?
+        </label>
+
+        <textarea
+          id="listaRapidaInput"
+          placeholder="Es. Latte\nPasta\nCaffè"
+        ></textarea>
+
+        <p class="info-text lista-aiuto">
+          Puoi scrivere anche più prodotti, uno per riga.
+        </p>
+
+        <button id="aggiungiAllaLista" class="primary-button" type="button">
+          Aggiungi alla lista
+        </button>
+
+        <p id="messaggioLista"></p>
+      </div>
+
+      <div class="card lista-card">
+        <div class="lista-intestazione">
+          <div>
+            <h2>La mia lista</h2>
+            <p id="conteggioLista" class="info-text lista-conteggio">
+              Lista vuota
+            </p>
+          </div>
+
+          <button id="eliminaSpuntati" class="secondary-button lista-small-button" type="button">
+            Elimina spuntati
+          </button>
+        </div>
+
+        <div id="listaSpesaElementi" class="lista-spesa-elementi"></div>
+
+        <p id="listaVuota" class="lista-vuota">
+          Non hai ancora aggiunto prodotti.
+        </p>
+
+        <button id="svuotaLista" class="danger-outline-button hidden" type="button">
+          Svuota tutta la lista
+        </button>
       </div>
 
     </main>
