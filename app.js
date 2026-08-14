@@ -37,6 +37,18 @@ const cercaProdotto =
 const ordinaRisultati =
   document.getElementById("ordinaRisultati");
 
+const filtroPuntoVendita =
+  document.getElementById("filtroPuntoVendita");
+
+const filtroPromozioni =
+  document.getElementById("filtroPromozioni");
+
+const filtroRecenti =
+  document.getElementById("filtroRecenti");
+
+const azzeraFiltriCerca =
+  document.getElementById("azzeraFiltriCerca");
+
 const conteggioRisultati =
   document.getElementById("conteggioRisultati");
 
@@ -112,6 +124,7 @@ PrezziDB.openDatabase()
       "✓ Archivio locale pronto";
 
     await caricaPuntiVendita();
+    await caricaFiltroPuntiVendita();
   })
   .catch(error => {
     console.error(error);
@@ -187,6 +200,7 @@ document
 
         if (action === "cerca") {
           mostraSezione(cercaSection);
+          await caricaFiltroPuntiVendita();
           cercaProdotto.focus();
           await eseguiRicercaPrezzi();
           return;
@@ -229,6 +243,24 @@ function normalizzaTesto(testo) {
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/\s+/g, " ");
 }
+
+function corrispondeRicercaProdotto(
+  nomeProdotto,
+  testoRicerca
+) {
+  const nome =
+    normalizzaTesto(nomeProdotto);
+
+  const parole =
+    normalizzaTesto(testoRicerca)
+      .split(" ")
+      .filter(Boolean);
+
+  return parole.every(
+    parola => nome.includes(parola)
+  );
+}
+
 
 function convertiNumero(valore) {
   if (!valore) {
@@ -365,6 +397,60 @@ async function caricaPuntiVendita() {
 
 
 /* =========================================
+   FILTRO PUNTI VENDITA - CERCA PREZZI
+========================================= */
+
+async function caricaFiltroPuntiVendita() {
+  const valoreAttuale =
+    filtroPuntoVendita.value;
+
+  const negozi =
+    await PrezziDB.leggiTutti(
+      "puntiVendita"
+    );
+
+  filtroPuntoVendita.innerHTML =
+    '<option value="">Tutti i punti vendita</option>';
+
+  negozi
+    .sort((a, b) =>
+      creaNomeNegozio(a)
+        .localeCompare(
+          creaNomeNegozio(b),
+          "it"
+        )
+    )
+    .forEach(negozio => {
+      const option =
+        document.createElement("option");
+
+      option.value =
+        negozio.id;
+
+      option.textContent =
+        creaNomeNegozio(negozio);
+
+      filtroPuntoVendita.appendChild(
+        option
+      );
+    });
+
+  if (
+    valoreAttuale &&
+    Array.from(
+      filtroPuntoVendita.options
+    ).some(
+      option =>
+        option.value === valoreAttuale
+    )
+  ) {
+    filtroPuntoVendita.value =
+      valoreAttuale;
+  }
+}
+
+
+/* =========================================
    SALVA PUNTO VENDITA
 ========================================= */
 
@@ -427,6 +513,7 @@ salvaNegozio.addEventListener(
       "success-message";
 
     await caricaPuntiVendita();
+    await caricaFiltroPuntiVendita();
   }
 );
 
@@ -907,6 +994,49 @@ function ePrezzoMigliore(
   ) < 0.001;
 }
 
+function calcolaDifferenzaDalMigliore(
+  rilevazione,
+  migliori
+) {
+  const unitario =
+    completaPrezzoUnitario(
+      rilevazione
+    );
+
+  const migliore =
+    migliori.get(unitario.unita);
+
+  if (
+    migliore === undefined ||
+    !Number.isFinite(migliore) ||
+    !Number.isFinite(unitario.valore) ||
+    migliore <= 0
+  ) {
+    return null;
+  }
+
+  const differenza =
+    unitario.valore - migliore;
+
+  if (differenza <= 0.001) {
+    return {
+      migliore: true,
+      differenza: 0,
+      percentuale: 0,
+      unita: unitario.unita
+    };
+  }
+
+  return {
+    migliore: false,
+    differenza: differenza,
+    percentuale:
+      differenza / migliore * 100,
+    unita: unitario.unita
+  };
+}
+
+
 async function preparaAggiornamentoPrezzo(
   rilevazione
 ) {
@@ -1189,7 +1319,7 @@ function ordinaRilevazioni(rilevazioni) {
 
 function creaRisultatoPrezzo(
   rilevazione,
-  migliore = false
+  migliori
 ) {
   const giorni =
     giorniDallaRilevazione(
@@ -1202,6 +1332,18 @@ function creaRisultatoPrezzo(
   const prezzoUnitario =
     completaPrezzoUnitario(
       rilevazione
+    );
+
+  const migliore =
+    ePrezzoMigliore(
+      rilevazione,
+      migliori
+    );
+
+  const differenzaMigliore =
+    calcolaDifferenzaDalMigliore(
+      rilevazione,
+      migliori
     );
 
   const card =
@@ -1318,6 +1460,12 @@ function creaRisultatoPrezzo(
     confezioneRiga
   );
 
+  const bloccoUnitario =
+    document.createElement("div");
+
+  bloccoUnitario.className =
+    "blocco-unitario";
+
   const unitario =
     document.createElement("div");
 
@@ -1328,12 +1476,39 @@ function creaRisultatoPrezzo(
     `${formattaEuro(prezzoUnitario.valore)}/` +
     `${formattaUnitaPrezzo(prezzoUnitario.unita)}`;
 
+  bloccoUnitario.appendChild(
+    unitario
+  );
+
+  if (
+    differenzaMigliore &&
+    !differenzaMigliore.migliore
+  ) {
+    const differenza =
+      document.createElement("div");
+
+    differenza.className =
+      "differenza-migliore";
+
+    differenza.textContent =
+      `+${formattaEuro(differenzaMigliore.differenza)}/` +
+      `${formattaUnitaPrezzo(differenzaMigliore.unita)} ` +
+      `(+${differenzaMigliore.percentuale.toLocaleString(
+        "it-IT",
+        { maximumFractionDigits: 1 }
+      )}%)`;
+
+    bloccoUnitario.appendChild(
+      differenza
+    );
+  }
+
   rigaPrezzi.appendChild(
     bloccoConfezione
   );
 
   rigaPrezzi.appendChild(
-    unitario
+    bloccoUnitario
   );
 
   card.appendChild(
@@ -1455,26 +1630,55 @@ async function eseguiRicercaPrezzi() {
     return;
   }
 
-  const filtrate =
-    rilevazioni.filter(rilevazione => {
-      const nome =
-        normalizzaTesto(
-          rilevazione.nomeProdotto
-        );
-
-      return nome.includes(
-        testoRicerca
-      );
-    });
+  const trovatePerNome =
+    rilevazioni.filter(
+      rilevazione =>
+        corrispondeRicercaProdotto(
+          rilevazione.nomeProdotto,
+          testoRicerca
+        )
+    );
 
   const ultime =
     tieniSoloUltimaRilevazionePerNegozio(
-      filtrate
+      trovatePerNome
     );
+
+  const puntoVenditaId =
+    Number(filtroPuntoVendita.value);
+
+  const filtrate =
+    ultime.filter(rilevazione => {
+      if (
+        puntoVenditaId &&
+        Number(rilevazione.puntoVenditaId) !==
+          puntoVenditaId
+      ) {
+        return false;
+      }
+
+      if (
+        filtroPromozioni.checked &&
+        !rilevazione.promozione
+      ) {
+        return false;
+      }
+
+      if (
+        filtroRecenti.checked &&
+        giorniDallaRilevazione(
+          rilevazione.dataRilevazione
+        ) > 14
+      ) {
+        return false;
+      }
+
+      return true;
+    });
 
   const ordinate =
     ordinaRilevazioni(
-      ultime
+      filtrate
     );
 
   if (ordinate.length === 0) {
@@ -1488,7 +1692,9 @@ async function eseguiRicercaPrezzi() {
       "nessun-risultato";
 
     vuoto.textContent =
-      "Non ci sono ancora prezzi salvati per questa ricerca.";
+      trovatePerNome.length > 0
+        ? "Ci sono prezzi per questo prodotto, ma nessuno corrisponde ai filtri selezionati."
+        : "Non ci sono ancora prezzi salvati per questa ricerca.";
 
     risultatiPrezzi.appendChild(
       vuoto
@@ -1509,10 +1715,7 @@ async function eseguiRicercaPrezzi() {
     risultatiPrezzi.appendChild(
       creaRisultatoPrezzo(
         rilevazione,
-        ePrezzoMigliore(
-          rilevazione,
-          migliori
-        )
+        migliori
       )
     );
   });
@@ -1527,3 +1730,30 @@ ordinaRisultati.addEventListener(
   "change",
   eseguiRicercaPrezzi
 );
+
+filtroPuntoVendita.addEventListener(
+  "change",
+  eseguiRicercaPrezzi
+);
+
+filtroPromozioni.addEventListener(
+  "change",
+  eseguiRicercaPrezzi
+);
+
+filtroRecenti.addEventListener(
+  "change",
+  eseguiRicercaPrezzi
+);
+
+azzeraFiltriCerca.addEventListener(
+  "click",
+  () => {
+    filtroPuntoVendita.value = "";
+    filtroPromozioni.checked = false;
+    filtroRecenti.checked = false;
+    ordinaRisultati.value = "unitario";
+    eseguiRicercaPrezzi();
+  }
+);
+
