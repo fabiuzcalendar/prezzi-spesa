@@ -498,3 +498,209 @@ textarea {
     text-align: left;
   }
 }
+
+/* =========================================
+   CERCA PREZZI - RIFINITURE V8
+========================================= */
+
+.azioni-ricerca-rapida {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.azioni-ricerca-rapida .secondary-button {
+  width: 100%;
+}
+
+.ricerche-recenti {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px dashed rgba(0, 0, 0, 0.16);
+}
+
+.ricerche-recenti-titolo {
+  margin: 0 0 9px;
+  color: #666;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.ricerche-recenti-lista {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ricerca-recente-button {
+  padding: 8px 11px;
+  border: 1px solid #ccc;
+  border-radius: 999px;
+  background: #f7f7f7;
+  color: #333;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.ricerca-recente-button:active {
+  transform: scale(0.98);
+}
+
+.riepilogo-ricerca {
+  margin: 8px 0 0;
+  padding: 9px 11px;
+  border-radius: 9px;
+  background: #f3f3f3;
+  color: #555;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+@media (max-width: 430px) {
+  .azioni-ricerca-rapida {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* =========================================
+   LISTA DELLA SPESA - V9
+========================================= */
+
+.lista-aiuto {
+  margin-bottom: 0;
+  font-size: 13px;
+}
+
+#messaggioLista {
+  margin-top: 15px;
+  font-weight: bold;
+}
+
+.lista-card {
+  padding-bottom: 16px;
+}
+
+.lista-intestazione {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.lista-intestazione h2 {
+  margin-bottom: 0;
+}
+
+.lista-conteggio {
+  margin: 6px 0 0;
+  font-size: 13px;
+}
+
+.lista-small-button {
+  width: auto;
+  min-height: 40px;
+  padding: 8px 10px;
+  font-size: 13px;
+}
+
+.lista-small-button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.lista-spesa-elementi {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.lista-spesa-riga {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 52px;
+  padding: 10px 10px 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.lista-spesa-riga.completato {
+  background: #f2f2f2;
+  opacity: 0.68;
+}
+
+.lista-spesa-check {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  margin: 0;
+  cursor: pointer;
+}
+
+.lista-spesa-check input {
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.lista-spesa-testo {
+  font-size: 17px;
+  font-weight: bold;
+  overflow-wrap: anywhere;
+}
+
+.lista-spesa-riga.completato .lista-spesa-testo {
+  text-decoration: line-through;
+}
+
+.lista-elimina-button {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border: 0;
+  border-radius: 10px;
+  background: #f5f5f5;
+  color: #8a1c1c;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.lista-vuota {
+  margin: 18px 0 8px;
+  padding: 18px;
+  border: 1px dashed #ccc;
+  border-radius: 12px;
+  color: #777;
+  text-align: center;
+}
+
+.danger-outline-button {
+  width: 100%;
+  margin-top: 18px;
+  padding: 12px;
+  border: 1px solid #b3261e;
+  border-radius: 10px;
+  background: white;
+  color: #b3261e;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+@media (max-width: 430px) {
+  .lista-intestazione {
+    flex-direction: column;
+  }
+
+  .lista-small-button {
+    width: 100%;
+  }
+}
