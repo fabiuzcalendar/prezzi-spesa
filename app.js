@@ -20,11 +20,49 @@ const aggiungiSection =
 const cercaSection =
   document.getElementById("cercaSection");
 
+const listaSection =
+  document.getElementById("listaSection");
+
 const tornaHome =
   document.getElementById("tornaHome");
 
 const tornaHomeCerca =
   document.getElementById("tornaHomeCerca");
+
+const tornaHomeLista =
+  document.getElementById("tornaHomeLista");
+
+
+/* =========================================
+   LISTA DELLA SPESA
+========================================= */
+
+const listaRapidaInput =
+  document.getElementById("listaRapidaInput");
+
+const aggiungiAllaLista =
+  document.getElementById("aggiungiAllaLista");
+
+const messaggioLista =
+  document.getElementById("messaggioLista");
+
+const conteggioLista =
+  document.getElementById("conteggioLista");
+
+const listaSpesaElementi =
+  document.getElementById("listaSpesaElementi");
+
+const listaVuota =
+  document.getElementById("listaVuota");
+
+const eliminaSpuntati =
+  document.getElementById("eliminaSpuntati");
+
+const svuotaLista =
+  document.getElementById("svuotaLista");
+
+const LISTA_SPESA_KEY =
+  "prezziSpesaListaRapidaV1";
 
 
 /* =========================================
@@ -54,6 +92,26 @@ const conteggioRisultati =
 
 const risultatiPrezzi =
   document.getElementById("risultatiPrezzi");
+
+const suggerimentiProdotti =
+  document.getElementById("suggerimentiProdotti");
+
+const mostraTuttiPrezzi =
+  document.getElementById("mostraTuttiPrezzi");
+
+const pulisciRicercaPrezzi =
+  document.getElementById("pulisciRicercaPrezzi");
+
+const ricercheRecenti =
+  document.getElementById("ricercheRecenti");
+
+const ricercheRecentiLista =
+  document.getElementById("ricercheRecentiLista");
+
+const riepilogoRicerca =
+  document.getElementById("riepilogoRicerca");
+
+let mostraTuttiAttivo = false;
 
 
 /* =========================================
@@ -163,6 +221,7 @@ function mostraSezione(sezione) {
   homeSection.classList.add("hidden");
   aggiungiSection.classList.add("hidden");
   cercaSection.classList.add("hidden");
+  listaSection.classList.add("hidden");
 
   sezione.classList.remove("hidden");
 
@@ -175,6 +234,7 @@ function mostraSezione(sezione) {
 function mostraHome() {
   aggiungiSection.classList.add("hidden");
   cercaSection.classList.add("hidden");
+  listaSection.classList.add("hidden");
   homeSection.classList.remove("hidden");
 
   window.scrollTo({
@@ -201,14 +261,17 @@ document
         if (action === "cerca") {
           mostraSezione(cercaSection);
           await caricaFiltroPuntiVendita();
+          await caricaSuggerimentiProdotti();
+          mostraRicercheRecenti();
           cercaProdotto.focus();
           await eseguiRicercaPrezzi();
           return;
         }
 
         if (action === "lista") {
-          statusText.textContent =
-            "Lista della spesa - prossimamente";
+          mostraSezione(listaSection);
+          renderizzaListaSpesa();
+          listaRapidaInput.focus();
           return;
         }
 
@@ -228,6 +291,283 @@ tornaHome.addEventListener(
 tornaHomeCerca.addEventListener(
   "click",
   mostraHome
+);
+
+tornaHomeLista.addEventListener(
+  "click",
+  mostraHome
+);
+
+
+/* =========================================
+   LISTA DELLA SPESA - LISTA RAPIDA
+========================================= */
+
+function leggiListaSpesa() {
+  try {
+    const salvata =
+      JSON.parse(
+        localStorage.getItem(
+          LISTA_SPESA_KEY
+        ) || "[]"
+      );
+
+    return Array.isArray(salvata)
+      ? salvata
+      : [];
+  } catch (error) {
+    console.error(
+      "Errore lettura lista spesa:",
+      error
+    );
+
+    return [];
+  }
+}
+
+function salvaListaSpesa(lista) {
+  localStorage.setItem(
+    LISTA_SPESA_KEY,
+    JSON.stringify(lista)
+  );
+}
+
+function creaIdLista() {
+  if (
+    window.crypto &&
+    typeof window.crypto.randomUUID ===
+      "function"
+  ) {
+    return window.crypto.randomUUID();
+  }
+
+  return (
+    Date.now().toString(36) +
+    "-" +
+    Math.random().toString(36).slice(2)
+  );
+}
+
+function aggiornaConteggioLista(lista) {
+  const totale = lista.length;
+  const spuntati =
+    lista.filter(
+      elemento => elemento.completato
+    ).length;
+  const daComprare =
+    totale - spuntati;
+
+  if (totale === 0) {
+    conteggioLista.textContent =
+      "Lista vuota";
+    return;
+  }
+
+  conteggioLista.textContent =
+    `${daComprare} da comprare · ${spuntati} spuntati`;
+}
+
+function renderizzaListaSpesa() {
+  const lista = leggiListaSpesa();
+
+  listaSpesaElementi.innerHTML = "";
+  aggiornaConteggioLista(lista);
+
+  if (lista.length === 0) {
+    listaVuota.classList.remove("hidden");
+    svuotaLista.classList.add("hidden");
+    eliminaSpuntati.disabled = true;
+    return;
+  }
+
+  listaVuota.classList.add("hidden");
+  svuotaLista.classList.remove("hidden");
+  eliminaSpuntati.disabled =
+    !lista.some(
+      elemento => elemento.completato
+    );
+
+  lista.forEach(elemento => {
+    const riga =
+      document.createElement("div");
+
+    riga.className =
+      "lista-spesa-riga" +
+      (elemento.completato
+        ? " completato"
+        : "");
+
+    const label =
+      document.createElement("label");
+    label.className =
+      "lista-spesa-check";
+
+    const checkbox =
+      document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.checked =
+      Boolean(elemento.completato);
+    checkbox.setAttribute(
+      "aria-label",
+      `Spunta ${elemento.testo}`
+    );
+
+    const testo =
+      document.createElement("span");
+    testo.className =
+      "lista-spesa-testo";
+    testo.textContent = elemento.testo;
+
+    label.appendChild(checkbox);
+    label.appendChild(testo);
+
+    const elimina =
+      document.createElement("button");
+    elimina.type = "button";
+    elimina.className =
+      "lista-elimina-button";
+    elimina.textContent = "✕";
+    elimina.setAttribute(
+      "aria-label",
+      `Elimina ${elemento.testo}`
+    );
+
+    checkbox.addEventListener(
+      "change",
+      () => {
+        const aggiornata =
+          leggiListaSpesa().map(item =>
+            item.id === elemento.id
+              ? {
+                  ...item,
+                  completato:
+                    checkbox.checked
+                }
+              : item
+          );
+
+        salvaListaSpesa(aggiornata);
+        renderizzaListaSpesa();
+      }
+    );
+
+    elimina.addEventListener(
+      "click",
+      () => {
+        const aggiornata =
+          leggiListaSpesa().filter(
+            item =>
+              item.id !== elemento.id
+          );
+
+        salvaListaSpesa(aggiornata);
+        renderizzaListaSpesa();
+      }
+    );
+
+    riga.appendChild(label);
+    riga.appendChild(elimina);
+    listaSpesaElementi.appendChild(riga);
+  });
+}
+
+function aggiungiProdottiLista() {
+  messaggioLista.textContent = "";
+  messaggioLista.className = "";
+
+  const righe =
+    listaRapidaInput.value
+      .split(/\r?\n/)
+      .map(riga => riga.trim())
+      .filter(Boolean);
+
+  if (righe.length === 0) {
+    messaggioLista.textContent =
+      "Scrivi almeno un prodotto.";
+    messaggioLista.className =
+      "error-message";
+    return;
+  }
+
+  const lista = leggiListaSpesa();
+  const nuoveRighe =
+    righe.map(testo => ({
+      id: creaIdLista(),
+      testo: testo,
+      completato: false,
+      dataCreazione:
+        new Date().toISOString()
+    }));
+
+  salvaListaSpesa([
+    ...lista,
+    ...nuoveRighe
+  ]);
+
+  listaRapidaInput.value = "";
+
+  messaggioLista.textContent =
+    nuoveRighe.length === 1
+      ? `✓ ${nuoveRighe[0].testo} aggiunto alla lista.`
+      : `✓ ${nuoveRighe.length} prodotti aggiunti alla lista.`;
+  messaggioLista.className =
+    "success-message";
+
+  renderizzaListaSpesa();
+  listaRapidaInput.focus();
+}
+
+aggiungiAllaLista.addEventListener(
+  "click",
+  aggiungiProdottiLista
+);
+
+listaRapidaInput.addEventListener(
+  "keydown",
+  event => {
+    if (
+      event.key === "Enter" &&
+      (event.ctrlKey || event.metaKey)
+    ) {
+      event.preventDefault();
+      aggiungiProdottiLista();
+    }
+  }
+);
+
+eliminaSpuntati.addEventListener(
+  "click",
+  () => {
+    const lista =
+      leggiListaSpesa().filter(
+        elemento =>
+          !elemento.completato
+      );
+
+    salvaListaSpesa(lista);
+    renderizzaListaSpesa();
+  }
+);
+
+svuotaLista.addEventListener(
+  "click",
+  () => {
+    const conferma = window.confirm(
+      "Vuoi davvero svuotare tutta la lista della spesa?"
+    );
+
+    if (!conferma) {
+      return;
+    }
+
+    salvaListaSpesa([]);
+    renderizzaListaSpesa();
+
+    messaggioLista.textContent =
+      "Lista svuotata.";
+    messaggioLista.className =
+      "success-message";
+  }
 );
 
 
@@ -449,6 +789,200 @@ async function caricaFiltroPuntiVendita() {
   }
 }
 
+
+/* =========================================
+   CERCA PREZZI - SUGGERIMENTI E RECENTI
+========================================= */
+
+async function caricaSuggerimentiProdotti() {
+  let nomi = [];
+
+  try {
+    const prodotti =
+      await PrezziDB.leggiTutti(
+        "prodotti"
+      );
+
+    nomi = prodotti
+      .map(prodotto => prodotto.nome)
+      .filter(Boolean);
+  } catch (error) {
+    console.error(error);
+  }
+
+  if (nomi.length === 0) {
+    try {
+      const rilevazioni =
+        await PrezziDB.leggiTutti(
+          "rilevazioniPrezzi"
+        );
+
+      nomi = rilevazioni
+        .map(rilevazione =>
+          rilevazione.nomeProdotto
+        )
+        .filter(Boolean);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const unici = Array.from(
+    new Map(
+      nomi.map(nome => [
+        normalizzaTesto(nome),
+        nome
+      ])
+    ).values()
+  ).sort((a, b) =>
+    a.localeCompare(b, "it")
+  );
+
+  suggerimentiProdotti.innerHTML = "";
+
+  unici.forEach(nome => {
+    const option =
+      document.createElement("option");
+
+    option.value = nome;
+
+    suggerimentiProdotti.appendChild(
+      option
+    );
+  });
+}
+
+function leggiRicercheRecenti() {
+  try {
+    const salvate =
+      JSON.parse(
+        localStorage.getItem(
+          "ricercheRecentiPrezzi"
+        ) || "[]"
+      );
+
+    return Array.isArray(salvate)
+      ? salvate.filter(Boolean)
+      : [];
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+}
+
+function salvaRicercaRecente(testo) {
+  const pulito = String(testo || "").trim();
+
+  if (pulito.length < 2) {
+    return;
+  }
+
+  const recenti =
+    leggiRicercheRecenti()
+      .filter(elemento =>
+        normalizzaTesto(elemento) !==
+        normalizzaTesto(pulito)
+      );
+
+  recenti.unshift(pulito);
+
+  localStorage.setItem(
+    "ricercheRecentiPrezzi",
+    JSON.stringify(
+      recenti.slice(0, 5)
+    )
+  );
+
+  mostraRicercheRecenti();
+}
+
+function mostraRicercheRecenti() {
+  const recenti =
+    leggiRicercheRecenti();
+
+  ricercheRecentiLista.innerHTML = "";
+
+  if (recenti.length === 0) {
+    ricercheRecenti.classList.add(
+      "hidden"
+    );
+    return;
+  }
+
+  ricercheRecenti.classList.remove(
+    "hidden"
+  );
+
+  recenti.forEach(testo => {
+    const button =
+      document.createElement("button");
+
+    button.type = "button";
+    button.className =
+      "ricerca-recente-button";
+    button.textContent = testo;
+
+    button.addEventListener(
+      "click",
+      () => {
+        mostraTuttiAttivo = false;
+        cercaProdotto.value = testo;
+        eseguiRicercaPrezzi();
+      }
+    );
+
+    ricercheRecentiLista.appendChild(
+      button
+    );
+  });
+}
+
+function aggiornaRiepilogoRicerca(
+  rilevazioni
+) {
+  if (!rilevazioni.length) {
+    riepilogoRicerca.textContent = "";
+    riepilogoRicerca.classList.add(
+      "hidden"
+    );
+    return;
+  }
+
+  const prodotti = new Set(
+    rilevazioni.map(rilevazione =>
+      normalizzaTesto(
+        rilevazione.nomeProdotto
+      )
+    )
+  );
+
+  const negozi = new Set(
+    rilevazioni.map(rilevazione =>
+      String(
+        rilevazione.puntoVenditaId ||
+        rilevazione.nomePuntoVendita ||
+        ""
+      )
+    )
+  );
+
+  const testoProdotti =
+    prodotti.size === 1
+      ? "1 prodotto"
+      : `${prodotti.size} prodotti`;
+
+  const testoNegozi =
+    negozi.size === 1
+      ? "1 punto vendita"
+      : `${negozi.size} punti vendita`;
+
+  riepilogoRicerca.textContent =
+    `${testoProdotti} · ${testoNegozi}`;
+
+  riepilogoRicerca.classList.remove(
+    "hidden"
+  );
+}
 
 /* =========================================
    SALVA PUNTO VENDITA
@@ -1606,8 +2140,12 @@ async function eseguiRicercaPrezzi() {
     );
 
   risultatiPrezzi.innerHTML = "";
+  aggiornaRiepilogoRicerca([]);
 
-  if (!testoRicerca) {
+  if (
+    !testoRicerca &&
+    !mostraTuttiAttivo
+  ) {
     conteggioRisultati.textContent =
       "Scrivi il nome di un prodotto per iniziare.";
 
@@ -1631,13 +2169,15 @@ async function eseguiRicercaPrezzi() {
   }
 
   const trovatePerNome =
-    rilevazioni.filter(
-      rilevazione =>
-        corrispondeRicercaProdotto(
-          rilevazione.nomeProdotto,
-          testoRicerca
-        )
-    );
+    mostraTuttiAttivo && !testoRicerca
+      ? rilevazioni
+      : rilevazioni.filter(
+          rilevazione =>
+            corrispondeRicercaProdotto(
+              rilevazione.nomeProdotto,
+              testoRicerca
+            )
+        );
 
   const ultime =
     tieniSoloUltimaRilevazionePerNegozio(
@@ -1708,6 +2248,27 @@ async function eseguiRicercaPrezzi() {
       ? "1 prezzo trovato."
       : `${ordinate.length} prezzi trovati.`;
 
+  aggiornaRiepilogoRicerca(
+    ordinate
+  );
+
+  const ricercaEsatta =
+    testoRicerca &&
+    ordinate.some(rilevazione =>
+      normalizzaTesto(
+        rilevazione.nomeProdotto
+      ) === testoRicerca
+    );
+
+  if (
+    ricercaEsatta &&
+    !mostraTuttiAttivo
+  ) {
+    salvaRicercaRecente(
+      cercaProdotto.value
+    );
+  }
+
   const migliori =
     trovaMiglioriPrezzi(ordinate);
 
@@ -1723,7 +2284,32 @@ async function eseguiRicercaPrezzi() {
 
 cercaProdotto.addEventListener(
   "input",
-  eseguiRicercaPrezzi
+  () => {
+    mostraTuttiAttivo = false;
+    eseguiRicercaPrezzi();
+  }
+);
+
+mostraTuttiPrezzi.addEventListener(
+  "click",
+  () => {
+    cercaProdotto.value = "";
+    mostraTuttiAttivo = true;
+    eseguiRicercaPrezzi();
+  }
+);
+
+pulisciRicercaPrezzi.addEventListener(
+  "click",
+  () => {
+    cercaProdotto.value = "";
+    mostraTuttiAttivo = false;
+    risultatiPrezzi.innerHTML = "";
+    conteggioRisultati.textContent =
+      "Scrivi il nome di un prodotto per iniziare.";
+    aggiornaRiepilogoRicerca([]);
+    cercaProdotto.focus();
+  }
 );
 
 ordinaRisultati.addEventListener(
