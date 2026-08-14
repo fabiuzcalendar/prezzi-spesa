@@ -21,7 +21,6 @@
     </header>
 
     <main>
-
       <button class="home-button" data-action="cerca">
         🔎
         <span>Cerca prezzi</span>
@@ -43,6 +42,81 @@
       </button>
 
       <p id="status">Caricamento...</p>
+    </main>
+
+  </section>
+
+
+  <!-- CERCA PREZZI -->
+  <section id="cercaSection" class="pagina hidden">
+
+    <header class="pagina-header">
+      <button id="tornaHomeCerca" class="back-button" aria-label="Torna alla home">
+        ←
+      </button>
+
+      <div>
+        <h1>Cerca prezzi</h1>
+        <p>Trova il prezzo più conveniente</p>
+      </div>
+    </header>
+
+    <main>
+
+      <div class="card">
+        <h2>Cerca prodotto</h2>
+
+        <label for="cercaProdotto">
+          Nome prodotto
+        </label>
+
+        <input
+          id="cercaProdotto"
+          type="search"
+          placeholder="Es. Nutella"
+          autocomplete="off"
+        >
+
+        <label for="ordinaRisultati">
+          Ordina risultati
+        </label>
+
+        <select id="ordinaRisultati">
+          <option value="unitario">Più conveniente per kg / L / pezzo</option>
+          <option value="prezzo">Prezzo confezione più basso</option>
+          <option value="recente">Rilevazione più recente</option>
+        </select>
+
+        <p id="conteggioRisultati" class="info-text">
+          Scrivi il nome di un prodotto per iniziare.
+        </p>
+      </div>
+
+      <div id="risultatiPrezzi"></div>
+
+      <div class="card legenda-card">
+        <h2>Età del prezzo</h2>
+
+        <div class="legenda-riga">
+          <span class="legenda-colore stato-verde"></span>
+          <span>Verde: da oggi a 7 giorni</span>
+        </div>
+
+        <div class="legenda-riga">
+          <span class="legenda-colore stato-giallo"></span>
+          <span>Giallo: da 8 a 14 giorni</span>
+        </div>
+
+        <div class="legenda-riga">
+          <span class="legenda-colore stato-arancione"></span>
+          <span>Arancione: da 15 a 29 giorni</span>
+        </div>
+
+        <div class="legenda-riga">
+          <span class="legenda-colore stato-rosso"></span>
+          <span>Rosso: 30 giorni o più</span>
+        </div>
+      </div>
 
     </main>
 
@@ -54,7 +128,7 @@
 
     <header class="pagina-header">
 
-      <button id="tornaHome" class="back-button">
+      <button id="tornaHome" class="back-button" aria-label="Torna alla home">
         ←
       </button>
 
@@ -208,7 +282,6 @@
           id="notaPrezzo"
           placeholder="Es. prezzo con tessera, offerta..."
         ></textarea>
-
 
         <label class="checkbox-label">
           <input
