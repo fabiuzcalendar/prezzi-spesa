@@ -66,3 +66,84 @@ main {
   color: #777;
   font-size: 14px;
 }
+.hidden {
+  display: none;
+}
+
+.pagina-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  text-align: left;
+}
+
+.pagina-header h1 {
+  font-size: 25px;
+}
+
+.pagina-header p {
+  margin: 5px 0 0;
+}
+
+.back-button {
+  border: 0;
+  background: transparent;
+  font-size: 32px;
+  cursor: pointer;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  margin-bottom: 18px;
+  border-radius: 15px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.card h2 {
+  margin-top: 0;
+  font-size: 20px;
+}
+
+label {
+  display: block;
+  margin-top: 15px;
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 17px;
+  background: white;
+}
+
+textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.primary-button {
+  width: 100%;
+  margin-top: 20px;
+  padding: 15px;
+  border: 0;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.info-text {
+  margin-top: 12px;
+  color: #666;
+}
+
+.disabled-card {
+  opacity: 0.55;
+}
