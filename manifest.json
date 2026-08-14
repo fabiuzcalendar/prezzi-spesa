@@ -1,10 +1,11 @@
 {
   "name": "Prezzi Spesa",
   "short_name": "Prezzi Spesa",
-  "description": "Applicazione per confrontare i prezzi dei supermercati e gestire la lista della spesa",
+  "description": "Applicazione personale per confrontare i prezzi dei supermercati e gestire la lista della spesa",
   "start_url": "./",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#f5f5f5",
+  "background_color": "#f5f6f5",
   "theme_color": "#ffffff",
   "lang": "it-IT"
 }
