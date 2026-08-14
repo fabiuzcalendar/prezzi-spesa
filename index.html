@@ -12,39 +12,139 @@
 
 <body>
 
-  <header>
-    <h1>Prezzi Spesa</h1>
-    <p>Confronta i prezzi e organizza la tua spesa</p>
-  </header>
+  <!-- HOME -->
+  <section id="homeSection">
 
-  <main>
+    <header>
+      <h1>Prezzi Spesa</h1>
+      <p>Confronta i prezzi e organizza la tua spesa</p>
+    </header>
 
-    <button class="home-button" data-action="cerca">
-      🔎
-      <span>Cerca prezzi</span>
-    </button>
+    <main>
 
-    <button class="home-button" data-action="aggiungi">
-      ➕
-      <span>Aggiungi prezzo</span>
-    </button>
+      <button class="home-button" data-action="cerca">
+        🔎 <span>Cerca prezzi</span>
+      </button>
 
-    <button class="home-button" data-action="lista">
-      🛒
-      <span>Lista della spesa</span>
-    </button>
+      <button class="home-button" data-action="aggiungi">
+        ➕ <span>Aggiungi prezzo</span>
+      </button>
 
-    <button class="home-button" data-action="aggiorna">
-      🕒
-      <span>Prezzi da aggiornare</span>
-    </button>
+      <button class="home-button" data-action="lista">
+        🛒 <span>Lista della spesa</span>
+      </button>
 
-    <p id="status">Versione iniziale dell'app</p>
+      <button class="home-button" data-action="aggiorna">
+        🕒 <span>Prezzi da aggiornare</span>
+      </button>
 
-  </main>
+      <p id="status">Caricamento...</p>
 
-<script src="./db.js"></script>
-<script src="./app.js"></script>
+    </main>
+
+  </section>
+
+
+  <!-- AGGIUNGI PREZZO -->
+  <section id="aggiungiSection" class="pagina hidden">
+
+    <header class="pagina-header">
+      <button id="tornaHome" class="back-button">←</button>
+
+      <div>
+        <h1>Aggiungi prezzo</h1>
+        <p>Seleziona prima il punto vendita</p>
+      </div>
+    </header>
+
+    <main>
+
+      <div class="card">
+
+        <label for="puntoVenditaSelect">
+          Punto vendita
+        </label>
+
+        <select id="puntoVenditaSelect">
+          <option value="">Seleziona un punto vendita</option>
+        </select>
+
+        <p id="negozioSelezionato" class="info-text">
+          Nessun punto vendita selezionato
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Nuovo punto vendita</h2>
+
+        <label for="nomeNegozio">Nome / Catena</label>
+
+        <input
+          id="nomeNegozio"
+          type="text"
+          placeholder="Es. Conad"
+        >
+
+
+        <label for="cittaNegozio">Città</label>
+
+        <input
+          id="cittaNegozio"
+          type="text"
+          placeholder="Es. Modena"
+        >
+
+
+        <label for="viaNegozio">
+          Via (facoltativa)
+        </label>
+
+        <input
+          id="viaNegozio"
+          type="text"
+          placeholder="Es. Via Emilia"
+        >
+
+
+        <label for="notaNegozio">
+          Nota (facoltativa)
+        </label>
+
+        <textarea
+          id="notaNegozio"
+          placeholder="Eventuale nota"
+        ></textarea>
+
+
+        <button id="salvaNegozio" class="primary-button">
+          Salva punto vendita
+        </button>
+
+        <p id="messaggioNegozio"></p>
+
+      </div>
+
+
+      <div class="card disabled-card">
+
+        <h2>Prodotto e prezzo</h2>
+
+        <p>
+          Questa parte verrà attivata nel prossimo passaggio.
+        </p>
+
+      </div>
+
+    </main>
+
+  </section>
+
+
+  <script src="./db.js"></script>
+  <script src="./app.js"></script>
 
 </body>
 </html>
