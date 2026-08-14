@@ -1,19 +1,49 @@
+:root {
+  --bg: #f5f6f5;
+  --card: #ffffff;
+  --text: #202124;
+  --muted: #666b70;
+  --line: #dde1dd;
+  --primary: #1f6f43;
+  --primary-dark: #155331;
+  --danger: #b3261e;
+  --blue: #1769aa;
+  --purple: #7b1fa2;
+  --shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+}
+
 * {
   box-sizing: border-box;
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f5f5f5;
-  color: #222;
+  min-height: 100vh;
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
 }
 
 header {
-  padding: 28px 20px 20px;
+  padding: calc(26px + env(safe-area-inset-top)) 20px 20px;
   text-align: center;
-  background: white;
-  border-bottom: 1px solid #ddd;
+  background: var(--card);
+  border-bottom: 1px solid var(--line);
 }
 
 header h1 {
@@ -22,54 +52,101 @@ header h1 {
 }
 
 header p {
-  margin-top: 8px;
-  color: #666;
+  margin: 8px 0 0;
+  color: var(--muted);
 }
 
 main {
-  max-width: 600px;
-  margin: auto;
-  padding: 22px;
-}
-
-.home-button {
   width: 100%;
-  min-height: 82px;
-  margin-bottom: 15px;
-  padding: 15px 20px;
-  border: 0;
-  border-radius: 15px;
-  background: white;
-  font-size: 20px;
-  text-align: left;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
-.home-button span {
-  margin-left: 12px;
-  font-weight: bold;
-}
-
-.home-button:active {
-  transform: scale(0.98);
-}
-
-#status {
-  text-align: center;
-  margin-top: 30px;
-  color: #777;
-  font-size: 14px;
+  max-width: 650px;
+  margin: 0 auto;
+  padding: 22px 18px 32px;
 }
 
 .hidden {
-  display: none;
+  display: none !important;
+}
+
+.home-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 78px;
+  margin-bottom: 14px;
+  padding: 15px 18px;
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  border-radius: 15px;
+  background: var(--card);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+}
+
+.home-button:active,
+.secondary-button:active,
+.primary-button:active,
+.secondary-strong-button:active,
+.primary-small-button:active,
+.danger-outline-button:active,
+.chip-button:active {
+  transform: scale(0.985);
+}
+
+.home-icon {
+  width: 38px;
+  flex: 0 0 38px;
+  font-size: 26px;
+  text-align: center;
+}
+
+.home-label {
+  margin-left: 12px;
+  padding-right: 45px;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.home-badge {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  min-width: 30px;
+  padding: 5px 8px;
+  transform: translateY(-50%);
+  border-radius: 999px;
+  background: var(--danger);
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.home-status-card {
+  margin-top: 24px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.6);
+  text-align: center;
+}
+
+#status,
+.home-riepilogo {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.home-riepilogo:not(:empty) {
+  margin-top: 5px;
 }
 
 .pagina-header {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 14px;
   text-align: left;
 }
 
@@ -82,85 +159,158 @@ main {
 }
 
 .back-button {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
   border: 0;
+  border-radius: 50%;
   background: transparent;
-  font-size: 32px;
+  color: var(--text);
+  font-size: 31px;
+  line-height: 1;
   cursor: pointer;
 }
 
+.back-button:active {
+  background: #f0f0f0;
+}
+
 .card {
-  background: white;
-  padding: 20px;
   margin-bottom: 18px;
+  padding: 19px;
+  border: 1px solid rgba(0, 0, 0, 0.025);
   border-radius: 15px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  background: var(--card);
+  box-shadow: var(--shadow);
 }
 
 .card h2 {
-  margin-top: 0;
+  margin: 0 0 12px;
   font-size: 20px;
 }
 
 label {
   display: block;
-  margin-top: 15px;
-  margin-bottom: 6px;
-  font-weight: bold;
+  margin: 15px 0 6px;
+  font-weight: 700;
 }
 
 input,
 select,
 textarea {
   width: 100%;
-  padding: 13px;
-  border: 1px solid #ccc;
+  min-height: 47px;
+  padding: 12px 13px;
+  border: 1px solid #c9ceca;
   border-radius: 10px;
-  font-size: 17px;
-  background: white;
+  background: #fff;
+  color: var(--text);
+  font-size: 16px;
+  outline: none;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(31, 111, 67, 0.12);
 }
 
 textarea {
-  min-height: 80px;
+  min-height: 88px;
   resize: vertical;
+}
+
+.form-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.two-cols {
+  grid-template-columns: 1fr 1fr;
+}
+
+.primary-button,
+.secondary-strong-button,
+.secondary-button,
+.primary-small-button,
+.danger-outline-button {
+  min-height: 46px;
+  border-radius: 11px;
+  font-weight: 700;
+  cursor: pointer;
 }
 
 .primary-button {
   width: 100%;
-  margin-top: 20px;
-  padding: 15px;
+  margin-top: 18px;
+  padding: 13px 15px;
   border: 0;
-  border-radius: 12px;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
+  background: var(--primary);
+  color: white;
+  font-size: 17px;
+}
+
+.primary-button:hover,
+.primary-small-button:hover {
+  background: var(--primary-dark);
+}
+
+.secondary-strong-button {
+  width: 100%;
+  margin-top: 16px;
+  padding: 12px 14px;
+  border: 0;
+  background: #263238;
+  color: white;
+}
+
+.secondary-button {
+  padding: 10px 12px;
+  border: 1px solid #aeb4af;
+  background: white;
+  color: #303438;
+}
+
+.primary-small-button {
+  padding: 10px 12px;
+  border: 0;
+  background: var(--primary);
+  color: white;
+}
+
+.full-button {
+  width: 100%;
+  margin-top: 12px;
+}
+
+.compact-button {
+  min-height: 38px;
+  padding: 8px 10px;
+  font-size: 13px;
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: default;
+  transform: none !important;
 }
 
 .info-text {
-  margin-top: 12px;
-  color: #666;
+  margin: 11px 0 0;
+  color: var(--muted);
+  line-height: 1.4;
 }
 
-.disabled-card {
-  opacity: 0.55;
+.small-text {
+  font-size: 13px;
 }
 
-.checkbox-label {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 18px;
-  font-weight: normal;
-}
-
-.checkbox-label input {
-  width: auto;
-  transform: scale(1.3);
-}
-
-#messaggioPrezzo,
-#messaggioNegozio {
-  margin-top: 15px;
-  font-weight: bold;
+.message {
+  min-height: 0;
+  margin: 13px 0 0;
+  font-weight: 700;
+  line-height: 1.35;
 }
 
 .success-message {
@@ -168,44 +318,141 @@ textarea {
 }
 
 .error-message {
-  color: #b3261e;
+  color: var(--danger);
 }
 
-/* =========================================
-   CERCA PREZZI
-========================================= */
+.warning-message {
+  color: #8a5300;
+}
 
-#risultatiPrezzi {
+.details-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.details-card summary {
+  padding: 18px 19px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.details-content {
+  padding: 0 19px 19px;
+}
+
+.checkbox-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 11px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fafafa;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.checkbox-box input {
+  width: 20px;
+  min-height: 20px;
+  height: 20px;
+  margin: 0;
+  flex: 0 0 20px;
+}
+
+.checkbox-inline {
+  margin-top: 16px;
+}
+
+.azioni-ricerca-rapida,
+.risultato-azioni,
+.filtri-cerca {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.azioni-ricerca-rapida {
+  margin-top: 11px;
+}
+
+.filtri-cerca {
+  margin-top: 14px;
+}
+
+.ricerche-recenti {
+  margin-top: 15px;
+  padding-top: 13px;
+  border-top: 1px dashed var(--line);
+}
+
+.mini-title {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.chip-button {
+  padding: 7px 10px;
+  border: 1px solid #ccd0cc;
+  border-radius: 999px;
+  background: #f8f8f8;
+  color: #333;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.riepilogo-box {
+  margin: 10px 0 0;
+  padding: 9px 11px;
+  border-radius: 9px;
+  background: #f1f3f1;
+  color: #555;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.results-list {
   display: flex;
   flex-direction: column;
   gap: 14px;
   margin-bottom: 18px;
 }
 
-.risultato-prezzo {
+.risultato-prezzo,
+.aggiornamento-card {
+  padding: 17px;
+  border-left: 7px solid #999;
+  border-radius: 14px;
   background: white;
-  padding: 18px;
-  border-radius: 15px;
-  border-left: 8px solid #999;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow);
 }
 
-.risultato-prezzo.stato-verde {
+.stato-verde {
   border-left-color: #2e7d32;
   background: #f1f8f2;
 }
 
-.risultato-prezzo.stato-giallo {
+.stato-giallo {
   border-left-color: #d4a000;
   background: #fffbea;
 }
 
-.risultato-prezzo.stato-arancione {
+.stato-arancione {
   border-left-color: #ef6c00;
   background: #fff4e8;
 }
 
-.risultato-prezzo.stato-rosso {
+.stato-rosso {
   border-left-color: #c62828;
   background: #fff0f0;
 }
@@ -213,37 +460,50 @@ textarea {
 .risultato-intestazione {
   display: flex;
   align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .risultato-nome {
-  margin: 0;
-  font-size: 20px;
+  margin: 0 auto 0 0;
+  font-size: 19px;
+}
+
+.badge-promo,
+.badge-migliore,
+.badge-auto {
+  flex: 0 0 auto;
+  padding: 5px 8px;
+  border-radius: 999px;
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
 }
 
 .badge-promo {
-  flex-shrink: 0;
-  padding: 5px 9px;
-  border-radius: 999px;
-  background: #7b1fa2;
-  color: white;
-  font-size: 12px;
-  font-weight: bold;
+  background: var(--purple);
+}
+
+.badge-migliore {
+  background: var(--blue);
+}
+
+.badge-auto {
+  background: #546e7a;
 }
 
 .risultato-negozio {
-  margin: 7px 0 14px;
-  color: #555;
-  font-weight: bold;
+  margin: 7px 0 12px;
+  color: #50555a;
+  font-weight: 700;
 }
 
 .risultato-prezzi-riga {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 15px;
-  padding: 12px 0;
+  gap: 16px;
+  padding: 11px 0;
   border-top: 1px solid rgba(0, 0, 0, 0.08);
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
@@ -256,330 +516,127 @@ textarea {
 }
 
 .prezzo-confezione {
-  font-size: 26px;
-  font-weight: bold;
+  font-size: 25px;
+  font-weight: 700;
 }
 
 .quantita-confezione {
   color: #555;
-  font-size: 15px;
-  font-weight: bold;
-}
-
-.prezzo-unitario {
-  text-align: right;
-  font-size: 18px;
-  font-weight: bold;
-}
-
-.risultato-data {
-  margin: 12px 0 0;
   font-size: 14px;
-  color: #555;
-}
-
-.risultato-nota {
-  margin: 10px 0 0;
-  padding-top: 10px;
-  border-top: 1px dashed rgba(0, 0, 0, 0.18);
-  font-size: 14px;
-  color: #444;
-}
-
-.nessun-risultato {
-  padding: 24px 18px;
-  background: white;
-  border-radius: 15px;
-  text-align: center;
-  color: #666;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
-.legenda-card {
-  padding: 16px 20px;
-}
-
-.legenda-card h2 {
-  margin-bottom: 12px;
-}
-
-.legenda-riga {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 9px 0;
-  font-size: 14px;
-  color: #555;
-}
-
-.legenda-colore {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.legenda-colore.stato-verde {
-  background: #2e7d32;
-}
-
-.legenda-colore.stato-giallo {
-  background: #d4a000;
-}
-
-.legenda-colore.stato-arancione {
-  background: #ef6c00;
-}
-
-.legenda-colore.stato-rosso {
-  background: #c62828;
-}
-
-@media (max-width: 430px) {
-  main {
-    padding: 16px;
-  }
-
-  .risultato-prezzi-riga {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .prezzo-unitario {
-    text-align: left;
-  }
-}
-
-
-/* =========================================
-   CERCA PREZZI - AZIONI E STORICO
-========================================= */
-
-.badge-migliore {
-  flex-shrink: 0;
-  padding: 5px 9px;
-  border-radius: 999px;
-  background: #1565c0;
-  color: white;
-  font-size: 11px;
-  font-weight: bold;
-}
-
-.risultato-intestazione {
-  flex-wrap: wrap;
-}
-
-.risultato-azioni {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 15px;
-}
-
-.secondary-button,
-.primary-small-button {
-  min-height: 44px;
-  padding: 10px 12px;
-  border-radius: 10px;
-  font-size: 15px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.secondary-button {
-  border: 1px solid #aaa;
-  background: white;
-  color: #333;
-}
-
-.primary-small-button {
-  border: 0;
-  background: #222;
-  color: white;
-}
-
-.storico-prezzi {
-  margin-top: 14px;
-  padding-top: 12px;
-  border-top: 1px dashed rgba(0, 0, 0, 0.22);
-}
-
-.storico-titolo,
-.storico-caricamento {
-  margin: 0 0 10px;
-  font-size: 14px;
-  font-weight: bold;
-  color: #555;
-}
-
-.storico-riga {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  padding: 10px 0;
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
-}
-
-.storico-data {
-  font-weight: bold;
-}
-
-.storico-quantita {
-  margin-top: 3px;
-  font-size: 13px;
-  color: #666;
-}
-
-.storico-prezzo {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 18px;
-  font-weight: bold;
-}
-
-.storico-promo {
-  padding: 3px 6px;
-  border-radius: 999px;
-  background: #7b1fa2;
-  color: white;
-  font-size: 9px;
-}
-
-@media (max-width: 430px) {
-  .risultato-azioni {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* =========================================
-   CERCA PREZZI - FILTRI E CONFRONTO V7
-========================================= */
-
-.filtri-cerca {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 14px;
-}
-
-.filtro-checkbox {
-  margin: 0;
-  padding: 11px 12px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  background: #fafafa;
-  font-size: 14px;
-}
-
-.reset-filtri-button {
-  width: 100%;
-  margin-top: 12px;
+  font-weight: 700;
 }
 
 .blocco-unitario {
   text-align: right;
 }
 
+.prezzo-unitario {
+  font-size: 17px;
+  font-weight: 700;
+}
+
 .differenza-migliore {
   margin-top: 4px;
   color: #a13b00;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.risultato-data,
+.risultato-nota {
+  margin: 10px 0 0;
+  color: #555;
   font-size: 13px;
-  font-weight: bold;
 }
 
-@media (max-width: 430px) {
-  .filtri-cerca {
-    grid-template-columns: 1fr;
-  }
-
-  .blocco-unitario {
-    text-align: left;
-  }
-}
-
-/* =========================================
-   CERCA PREZZI - RIFINITURE V8
-========================================= */
-
-.azioni-ricerca-rapida {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 12px;
-}
-
-.azioni-ricerca-rapida .secondary-button {
-  width: 100%;
-}
-
-.ricerche-recenti {
-  margin-top: 16px;
-  padding-top: 14px;
+.risultato-nota {
+  padding-top: 9px;
   border-top: 1px dashed rgba(0, 0, 0, 0.16);
 }
 
-.ricerche-recenti-titolo {
-  margin: 0 0 9px;
-  color: #666;
-  font-size: 13px;
-  font-weight: bold;
+.risultato-azioni {
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 13px;
 }
 
-.ricerche-recenti-lista {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+.storico-prezzi {
+  margin-top: 13px;
+  padding-top: 11px;
+  border-top: 1px dashed rgba(0, 0, 0, 0.2);
 }
 
-.ricerca-recente-button {
-  padding: 8px 11px;
-  border: 1px solid #ccc;
-  border-radius: 999px;
-  background: #f7f7f7;
-  color: #333;
-  font-size: 13px;
+.storico-riga {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.07);
+}
+
+.storico-riga:first-of-type {
+  border-top: 0;
+}
+
+.storico-data {
+  font-weight: 700;
+}
+
+.storico-quantita,
+.storico-unitario {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.storico-prezzo {
+  text-align: right;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.storico-delete {
+  width: 34px;
+  height: 34px;
+  border: 1px solid #e0b9b6;
+  border-radius: 9px;
+  background: white;
+  color: var(--danger);
   cursor: pointer;
 }
 
-.ricerca-recente-button:active {
-  transform: scale(0.98);
+.legenda-card {
+  padding: 15px 18px;
 }
 
-.riepilogo-ricerca {
-  margin: 8px 0 0;
-  padding: 9px 11px;
-  border-radius: 9px;
-  background: #f3f3f3;
+.legenda-riga {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 8px 0;
   color: #555;
   font-size: 13px;
-  font-weight: bold;
 }
 
-@media (max-width: 430px) {
-  .azioni-ricerca-rapida {
-    grid-template-columns: 1fr;
-  }
+.legenda-colore {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 15px;
+  border-radius: 50%;
 }
 
+.legenda-colore.verde { background: #2e7d32; }
+.legenda-colore.giallo { background: #d4a000; }
+.legenda-colore.arancione { background: #ef6c00; }
+.legenda-colore.rosso { background: #c62828; }
 
-/* =========================================
-   LISTA DELLA SPESA - V9
-========================================= */
-
-.lista-aiuto {
-  margin-bottom: 0;
-  font-size: 13px;
-}
-
-#messaggioLista {
-  margin-top: 15px;
-  font-weight: bold;
-}
-
-.lista-card {
-  padding-bottom: 16px;
+.empty-box {
+  margin: 14px 0 0;
+  padding: 18px;
+  border: 1px dashed #c9ceca;
+  border-radius: 11px;
+  color: var(--muted);
+  text-align: center;
 }
 
 .lista-intestazione {
@@ -587,28 +644,11 @@ textarea {
   align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .lista-intestazione h2 {
-  margin-bottom: 0;
-}
-
-.lista-conteggio {
-  margin: 6px 0 0;
-  font-size: 13px;
-}
-
-.lista-small-button {
-  width: auto;
-  min-height: 40px;
-  padding: 8px 10px;
-  font-size: 13px;
-}
-
-.lista-small-button:disabled {
-  opacity: 0.45;
-  cursor: default;
+  margin-bottom: 2px;
 }
 
 .lista-spesa-elementi {
@@ -618,89 +658,216 @@ textarea {
 }
 
 .lista-spesa-riga {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  min-height: 52px;
-  padding: 10px 10px 10px 12px;
-  border: 1px solid #ddd;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid var(--line);
   border-radius: 12px;
-  background: #fff;
+  background: white;
 }
 
 .lista-spesa-riga.completato {
-  background: #f2f2f2;
-  opacity: 0.68;
+  background: #f1f2f1;
+  opacity: 0.7;
 }
 
-.lista-spesa-check {
+.lista-check {
+  width: 23px;
+  min-height: 23px;
+  height: 23px;
+  margin: 0;
+}
+
+.lista-main {
+  min-width: 0;
+}
+
+.lista-title-row {
   display: flex;
   align-items: center;
-  gap: 12px;
-  flex: 1;
-  margin: 0;
-  cursor: pointer;
+  flex-wrap: wrap;
+  gap: 6px;
 }
 
-.lista-spesa-check input {
-  width: 22px;
-  height: 22px;
-  margin: 0;
-  flex-shrink: 0;
-}
-
-.lista-spesa-testo {
-  font-size: 17px;
-  font-weight: bold;
+.lista-testo {
+  font-size: 16px;
+  font-weight: 700;
   overflow-wrap: anywhere;
 }
 
-.lista-spesa-riga.completato .lista-spesa-testo {
+.completato .lista-testo {
   text-decoration: line-through;
 }
 
-.lista-elimina-button {
-  width: 40px;
-  height: 40px;
-  flex-shrink: 0;
-  border: 0;
-  border-radius: 10px;
-  background: #f5f5f5;
-  color: #8a1c1c;
-  font-size: 18px;
-  font-weight: bold;
+.lista-meta {
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.lista-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lista-qty {
+  min-width: 34px;
+  padding: 4px 7px;
+  border-radius: 8px;
+  background: #f3f4f3;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.lista-mini-button {
+  width: 36px;
+  height: 36px;
+  border: 1px solid #d2d6d2;
+  border-radius: 9px;
+  background: white;
+  color: #333;
+  font-weight: 700;
   cursor: pointer;
 }
 
-.lista-vuota {
-  margin: 18px 0 8px;
-  padding: 18px;
-  border: 1px dashed #ccc;
-  border-radius: 12px;
-  color: #777;
-  text-align: center;
+.lista-delete-button {
+  color: var(--danger);
+}
+
+.stima-card {
+  border: 1px solid #c7dfcf;
+  background: #f7fcf8;
+}
+
+.stima-totale-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-top: 1px solid #d8eadf;
+  border-bottom: 1px solid #d8eadf;
+}
+
+.stima-totale-row strong {
+  font-size: 24px;
+  color: var(--primary-dark);
 }
 
 .danger-outline-button {
   width: 100%;
-  margin-top: 18px;
-  padding: 12px;
-  border: 1px solid #b3261e;
-  border-radius: 10px;
+  margin-top: 16px;
+  padding: 11px 13px;
+  border: 1px solid var(--danger);
   background: white;
-  color: #b3261e;
-  font-size: 15px;
-  font-weight: bold;
-  cursor: pointer;
+  color: var(--danger);
 }
 
-@media (max-width: 430px) {
+.aggiornamento-card .risultato-azioni {
+  grid-template-columns: 1fr;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.stat-box {
+  padding: 13px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  background: #fafafa;
+}
+
+.stat-value {
+  display: block;
+  font-size: 23px;
+  font-weight: 700;
+}
+
+.stat-label {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.warning-card {
+  border: 1px solid #ead4ae;
+  background: #fffbf3;
+}
+
+.info-card {
+  border: 1px solid #d1dbe3;
+  background: #f7fafc;
+}
+
+.app-footer {
+  max-width: 650px;
+  margin: 0 auto;
+  padding: 0 18px calc(22px + env(safe-area-inset-bottom));
+  color: #8a8e91;
+  font-size: 12px;
+  text-align: center;
+}
+
+@media (max-width: 520px) {
+  main {
+    padding: 16px 14px 28px;
+  }
+
+  header {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .two-cols,
+  .filtri-cerca,
+  .azioni-ricerca-rapida {
+    grid-template-columns: 1fr;
+  }
+
+  .risultato-prezzi-riga {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .blocco-unitario {
+    text-align: left;
+  }
+
+  .risultato-azioni {
+    grid-template-columns: 1fr;
+  }
+
   .lista-intestazione {
     flex-direction: column;
   }
 
-  .lista-small-button {
+  .lista-intestazione .compact-button {
     width: 100%;
+  }
+
+  .lista-spesa-riga {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .lista-actions {
+    grid-column: 2;
+    justify-content: flex-end;
+  }
+
+  .storico-riga {
+    grid-template-columns: 1fr auto;
+  }
+
+  .storico-delete {
+    grid-column: 2;
   }
 }
