@@ -37,18 +37,13 @@ main {
   min-height: 82px;
   margin-bottom: 15px;
   padding: 15px 20px;
-
   border: 0;
   border-radius: 15px;
-
   background: white;
-
   font-size: 20px;
   text-align: left;
-
   cursor: pointer;
-
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .home-button span {
@@ -66,6 +61,7 @@ main {
   color: #777;
   font-size: 14px;
 }
+
 .hidden {
   display: none;
 }
@@ -97,7 +93,7 @@ main {
   padding: 20px;
   margin-bottom: 18px;
   border-radius: 15px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .card h2 {
@@ -147,6 +143,7 @@ textarea {
 .disabled-card {
   opacity: 0.55;
 }
+
 .checkbox-label {
   display: flex;
   align-items: center;
@@ -172,4 +169,183 @@ textarea {
 
 .error-message {
   color: #b3261e;
+}
+
+/* =========================================
+   CERCA PREZZI
+========================================= */
+
+#risultatiPrezzi {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.risultato-prezzo {
+  background: white;
+  padding: 18px;
+  border-radius: 15px;
+  border-left: 8px solid #999;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.risultato-prezzo.stato-verde {
+  border-left-color: #2e7d32;
+  background: #f1f8f2;
+}
+
+.risultato-prezzo.stato-giallo {
+  border-left-color: #d4a000;
+  background: #fffbea;
+}
+
+.risultato-prezzo.stato-arancione {
+  border-left-color: #ef6c00;
+  background: #fff4e8;
+}
+
+.risultato-prezzo.stato-rosso {
+  border-left-color: #c62828;
+  background: #fff0f0;
+}
+
+.risultato-intestazione {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.risultato-nome {
+  margin: 0;
+  font-size: 20px;
+}
+
+.badge-promo {
+  flex-shrink: 0;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: #7b1fa2;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.risultato-negozio {
+  margin: 7px 0 14px;
+  color: #555;
+  font-weight: bold;
+}
+
+.risultato-prezzi-riga {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 12px 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.confezione-riga {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.prezzo-confezione {
+  font-size: 26px;
+  font-weight: bold;
+}
+
+.quantita-confezione {
+  color: #555;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.prezzo-unitario {
+  text-align: right;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.risultato-data {
+  margin: 12px 0 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.risultato-nota {
+  margin: 10px 0 0;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(0, 0, 0, 0.18);
+  font-size: 14px;
+  color: #444;
+}
+
+.nessun-risultato {
+  padding: 24px 18px;
+  background: white;
+  border-radius: 15px;
+  text-align: center;
+  color: #666;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.legenda-card {
+  padding: 16px 20px;
+}
+
+.legenda-card h2 {
+  margin-bottom: 12px;
+}
+
+.legenda-riga {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 9px 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.legenda-colore {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legenda-colore.stato-verde {
+  background: #2e7d32;
+}
+
+.legenda-colore.stato-giallo {
+  background: #d4a000;
+}
+
+.legenda-colore.stato-arancione {
+  background: #ef6c00;
+}
+
+.legenda-colore.stato-rosso {
+  background: #c62828;
+}
+
+@media (max-width: 430px) {
+  main {
+    padding: 16px;
+  }
+
+  .risultato-prezzi-riga {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .prezzo-unitario {
+    text-align: left;
+  }
 }
