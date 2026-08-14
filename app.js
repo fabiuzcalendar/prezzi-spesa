@@ -313,3 +313,347 @@ function mostraNegozioSelezionato() {
   }
 
 }
+/* ========================================
+   PRODOTTI E RILEVAZIONI PREZZI
+======================================== */
+
+const nomeProdotto =
+  document.getElementById("nomeProdotto");
+
+const prezzoProdotto =
+  document.getElementById("prezzoProdotto");
+
+const quantitaProdotto =
+  document.getElementById("quantitaProdotto");
+
+const unitaProdotto =
+  document.getElementById("unitaProdotto");
+
+const notaPrezzo =
+  document.getElementById("notaPrezzo");
+
+const promozionePrezzo =
+  document.getElementById("promozionePrezzo");
+
+const salvaPrezzo =
+  document.getElementById("salvaPrezzo");
+
+const messaggioPrezzo =
+  document.getElementById("messaggioPrezzo");
+
+
+function normalizzaTesto(testo) {
+
+  return testo
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, " ");
+
+}
+
+
+function calcolaPrezzoUnitario(
+  prezzo,
+  quantita,
+  unita
+) {
+
+  if (unita === "g") {
+
+    return {
+      valore: prezzo * 1000 / quantita,
+      unita: "kg"
+    };
+
+  }
+
+  if (unita === "kg") {
+
+    return {
+      valore: prezzo / quantita,
+      unita: "kg"
+    };
+
+  }
+
+  if (unita === "ml") {
+
+    return {
+      valore: prezzo * 1000 / quantita,
+      unita: "l"
+    };
+
+  }
+
+  if (unita === "l") {
+
+    return {
+      valore: prezzo / quantita,
+      unita: "l"
+    };
+
+  }
+
+  if (unita === "pezzi") {
+
+    return {
+      valore: prezzo / quantita,
+      unita: "pezzo"
+    };
+
+  }
+
+}
+
+
+/* SALVA PREZZO */
+
+salvaPrezzo.addEventListener(
+  "click",
+  async () => {
+
+    messaggioPrezzo.className = "";
+
+    const nome =
+      nomeProdotto.value.trim();
+
+    const prezzo =
+      Number(prezzoProdotto.value);
+
+    const quantita =
+      Number(quantitaProdotto.value);
+
+    const unita =
+      unitaProdotto.value;
+
+    const puntoVenditaId =
+      Number(puntoVenditaSelect.value);
+
+
+    /* CONTROLLI */
+
+    if (!puntoVenditaId) {
+
+      messaggioPrezzo.textContent =
+        "Seleziona prima un punto vendita.";
+
+      messaggioPrezzo.className =
+        "error-message";
+
+      return;
+
+    }
+
+
+    if (!nome) {
+
+      messaggioPrezzo.textContent =
+        "Inserisci il nome del prodotto.";
+
+      messaggioPrezzo.className =
+        "error-message";
+
+      return;
+
+    }
+
+
+    if (!prezzo || prezzo <= 0) {
+
+      messaggioPrezzo.textContent =
+        "Inserisci un prezzo valido.";
+
+      messaggioPrezzo.className =
+        "error-message";
+
+      return;
+
+    }
+
+
+    if (!quantita || quantita <= 0) {
+
+      messaggioPrezzo.textContent =
+        "Inserisci una quantità valida.";
+
+      messaggioPrezzo.className =
+        "error-message";
+
+      return;
+
+    }
+
+
+    /* CERCA SE IL PRODOTTO ESISTE */
+
+    const prodotti =
+      await PrezziDB.leggiTutti(
+        "prodotti"
+      );
+
+    const nomeNormalizzato =
+      normalizzaTesto(nome);
+
+    let prodotto =
+      prodotti.find(
+        p =>
+          p.nomeNormalizzato ===
+          nomeNormalizzato
+      );
+
+
+    /* SE NON ESISTE, CREALO */
+
+    if (!prodotto) {
+
+      const nuovoProdotto = {
+
+        nome: nome,
+
+        nomeNormalizzato:
+          nomeNormalizzato,
+
+        dataCreazione:
+          new Date().toISOString()
+
+      };
+
+
+      const prodottoId =
+        await PrezziDB.aggiungiDato(
+          "prodotti",
+          nuovoProdotto
+        );
+
+
+      prodotto = {
+        ...nuovoProdotto,
+        id: prodottoId
+      };
+
+    }
+
+
+    /* TROVA IL NEGOZIO */
+
+    const negozi =
+      await PrezziDB.leggiTutti(
+        "puntiVendita"
+      );
+
+    const negozio =
+      negozi.find(
+        n => n.id === puntoVenditaId
+      );
+
+
+    if (!negozio) {
+
+      messaggioPrezzo.textContent =
+        "Punto vendita non trovato.";
+
+      messaggioPrezzo.className =
+        "error-message";
+
+      return;
+
+    }
+
+
+    /* CALCOLO PREZZO KG / LITRO / PEZZO */
+
+    const prezzoUnitario =
+      calcolaPrezzoUnitario(
+        prezzo,
+        quantita,
+        unita
+      );
+
+
+    /* CREA RILEVAZIONE */
+
+    const rilevazione = {
+
+      prodottoId:
+        prodotto.id,
+
+      nomeProdotto:
+        prodotto.nome,
+
+      puntoVenditaId:
+        negozio.id,
+
+      nomePuntoVendita:
+        creaNomeNegozio(negozio),
+
+      prezzo:
+        prezzo,
+
+      quantita:
+        quantita,
+
+      unita:
+        unita,
+
+      prezzoUnitario:
+        Number(
+          prezzoUnitario.valore.toFixed(2)
+        ),
+
+      unitaPrezzoUnitario:
+        prezzoUnitario.unita,
+
+      nota:
+        notaPrezzo.value.trim(),
+
+      promozione:
+        promozionePrezzo.checked,
+
+      dataRilevazione:
+        new Date().toISOString()
+
+    };
+
+
+    await PrezziDB.aggiungiDato(
+      "rilevazioniPrezzi",
+      rilevazione
+    );
+
+
+    /* CONFERMA */
+
+    let messaggio =
+      `✓ ${nome} salvato a €${prezzo.toFixed(2)}`;
+
+    messaggio +=
+      ` — ${quantita} ${unita}`;
+
+    messaggio +=
+      ` — €${prezzoUnitario.valore.toFixed(2)}/${prezzoUnitario.unita}`;
+
+
+    messaggioPrezzo.textContent =
+      messaggio;
+
+    messaggioPrezzo.className =
+      "success-message";
+
+
+    /* PULISCE IL PRODOTTO,
+       MA NON IL SUPERMERCATO */
+
+    nomeProdotto.value = "";
+
+    prezzoProdotto.value = "";
+
+    quantitaProdotto.value = "";
+
+    notaPrezzo.value = "";
+
+    promozionePrezzo.checked = false;
+
+    nomeProdotto.focus();
+
+  }
+);
