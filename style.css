@@ -349,3 +349,106 @@ textarea {
     text-align: left;
   }
 }
+
+
+/* =========================================
+   CERCA PREZZI - AZIONI E STORICO
+========================================= */
+
+.badge-migliore {
+  flex-shrink: 0;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: #1565c0;
+  color: white;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.risultato-intestazione {
+  flex-wrap: wrap;
+}
+
+.risultato-azioni {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.secondary-button,
+.primary-small-button {
+  min-height: 44px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.secondary-button {
+  border: 1px solid #aaa;
+  background: white;
+  color: #333;
+}
+
+.primary-small-button {
+  border: 0;
+  background: #222;
+  color: white;
+}
+
+.storico-prezzi {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed rgba(0, 0, 0, 0.22);
+}
+
+.storico-titolo,
+.storico-caricamento {
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #555;
+}
+
+.storico-riga {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 10px 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.storico-data {
+  font-weight: bold;
+}
+
+.storico-quantita {
+  margin-top: 3px;
+  font-size: 13px;
+  color: #666;
+}
+
+.storico-prezzo {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.storico-promo {
+  padding: 3px 6px;
+  border-radius: 999px;
+  background: #7b1fa2;
+  color: white;
+  font-size: 9px;
+}
+
+@media (max-width: 430px) {
+  .risultato-azioni {
+    grid-template-columns: 1fr;
+  }
+}
