@@ -1,9 +1,25 @@
-const statusText = document.getElementById("status");
+/* =========================================
+   PREZZI SPESA
+   APP PRINCIPALE
+========================================= */
 
-const homeSection = document.getElementById("homeSection");
-const aggiungiSection = document.getElementById("aggiungiSection");
 
-const tornaHome = document.getElementById("tornaHome");
+/* ELEMENTI GENERALI */
+
+const statusText =
+  document.getElementById("status");
+
+const homeSection =
+  document.getElementById("homeSection");
+
+const aggiungiSection =
+  document.getElementById("aggiungiSection");
+
+const tornaHome =
+  document.getElementById("tornaHome");
+
+
+/* PUNTO VENDITA */
 
 const puntoVenditaSelect =
   document.getElementById("puntoVenditaSelect");
@@ -30,12 +46,42 @@ const messaggioNegozio =
   document.getElementById("messaggioNegozio");
 
 
-/* DATABASE */
+/* PRODOTTO */
+
+const nomeProdotto =
+  document.getElementById("nomeProdotto");
+
+const prezzoProdotto =
+  document.getElementById("prezzoProdotto");
+
+const quantitaProdotto =
+  document.getElementById("quantitaProdotto");
+
+const unitaProdotto =
+  document.getElementById("unitaProdotto");
+
+const notaPrezzo =
+  document.getElementById("notaPrezzo");
+
+const promozionePrezzo =
+  document.getElementById("promozionePrezzo");
+
+const salvaPrezzo =
+  document.getElementById("salvaPrezzo");
+
+const messaggioPrezzo =
+  document.getElementById("messaggioPrezzo");
+
+
+/* =========================================
+   DATABASE
+========================================= */
 
 PrezziDB.openDatabase()
   .then(async () => {
 
-    statusText.textContent = "✓ Archivio locale pronto";
+    statusText.textContent =
+      "✓ Archivio locale pronto";
 
     await caricaPuntiVendita();
 
@@ -50,7 +96,9 @@ PrezziDB.openDatabase()
   });
 
 
-/* SERVICE WORKER */
+/* =========================================
+   FUNZIONAMENTO OFFLINE
+========================================= */
 
 if ("serviceWorker" in navigator) {
 
@@ -58,74 +106,125 @@ if ("serviceWorker" in navigator) {
 
     navigator.serviceWorker
       .register("./sw.js")
-      .catch(error =>
+      .then(() => {
+        console.log("Modalità offline attiva");
+      })
+      .catch(error => {
         console.error(
           "Errore Service Worker:",
           error
-        )
-      );
+        );
+      });
 
   });
 
 }
 
 
-/* NAVIGAZIONE */
+/* =========================================
+   NAVIGAZIONE
+========================================= */
 
 document
   .querySelectorAll(".home-button")
   .forEach(button => {
 
-    button.addEventListener("click", async () => {
+    button.addEventListener(
+      "click",
+      async () => {
 
-      const action = button.dataset.action;
+        const action =
+          button.dataset.action;
 
-      if (action === "aggiungi") {
 
-        homeSection.classList.add("hidden");
+        if (action === "aggiungi") {
 
-        aggiungiSection.classList.remove("hidden");
+          homeSection.classList.add(
+            "hidden"
+          );
 
-        await caricaPuntiVendita();
+          aggiungiSection.classList.remove(
+            "hidden"
+          );
+
+          await caricaPuntiVendita();
+
+        }
+
+
+        if (action === "cerca") {
+
+          statusText.textContent =
+            "Cerca prezzi - prossimamente";
+
+        }
+
+
+        if (action === "lista") {
+
+          statusText.textContent =
+            "Lista della spesa - prossimamente";
+
+        }
+
+
+        if (action === "aggiorna") {
+
+          statusText.textContent =
+            "Prezzi da aggiornare - prossimamente";
+
+        }
 
       }
-
-      if (action === "cerca") {
-
-        statusText.textContent =
-          "Cerca prezzi - prossimamente";
-
-      }
-
-      if (action === "lista") {
-
-        statusText.textContent =
-          "Lista della spesa - prossimamente";
-
-      }
-
-      if (action === "aggiorna") {
-
-        statusText.textContent =
-          "Prezzi da aggiornare - prossimamente";
-
-      }
-
-    });
+    );
 
   });
 
 
-tornaHome.addEventListener("click", () => {
+tornaHome.addEventListener(
+  "click",
+  () => {
 
-  aggiungiSection.classList.add("hidden");
+    aggiungiSection.classList.add(
+      "hidden"
+    );
 
-  homeSection.classList.remove("hidden");
+    homeSection.classList.remove(
+      "hidden"
+    );
 
-});
+  }
+);
 
 
-/* CREA NOME VISUALIZZATO */
+/* =========================================
+   FUNZIONI UTILI
+========================================= */
+
+function normalizzaTesto(testo) {
+
+  return testo
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, " ");
+
+}
+
+
+function convertiNumero(valore) {
+
+  if (!valore) {
+    return NaN;
+  }
+
+  return Number(
+    String(valore)
+      .replace(",", ".")
+      .trim()
+  );
+
+}
+
 
 function creaNomeNegozio(negozio) {
 
@@ -133,7 +232,10 @@ function creaNomeNegozio(negozio) {
     `${negozio.nome} di ${negozio.citta}`;
 
   if (negozio.via) {
-    nome += ` - ${negozio.via}`;
+
+    nome +=
+      ` - ${negozio.via}`;
+
   }
 
   return nome;
@@ -141,29 +243,40 @@ function creaNomeNegozio(negozio) {
 }
 
 
-/* CARICA NEGOZI */
+/* =========================================
+   CARICAMENTO PUNTI VENDITA
+========================================= */
 
 async function caricaPuntiVendita() {
 
   const negozi =
-    await PrezziDB.leggiTutti("puntiVendita");
+    await PrezziDB.leggiTutti(
+      "puntiVendita"
+    );
+
 
   puntoVenditaSelect.innerHTML =
-    `<option value="">
-       Seleziona un punto vendita
-     </option>`;
+    `
+      <option value="">
+        Seleziona un punto vendita
+      </option>
+    `;
+
 
   negozi.forEach(negozio => {
 
     const option =
       document.createElement("option");
 
-    option.value = negozio.id;
+    option.value =
+      negozio.id;
 
     option.textContent =
       creaNomeNegozio(negozio);
 
-    puntoVenditaSelect.appendChild(option);
+    puntoVenditaSelect.appendChild(
+      option
+    );
 
   });
 
@@ -173,23 +286,29 @@ async function caricaPuntiVendita() {
       "ultimoPuntoVendita"
     );
 
+
   if (ultimoNegozio) {
 
     puntoVenditaSelect.value =
       ultimoNegozio;
 
-    mostraNegozioSelezionato();
-
   }
+
+
+  mostraNegozioSelezionato();
 
 }
 
 
-/* SALVA NEGOZIO */
+/* =========================================
+   SALVA PUNTO VENDITA
+========================================= */
 
 salvaNegozio.addEventListener(
   "click",
   async () => {
+
+    messaggioNegozio.className = "";
 
     const nome =
       nomeNegozio.value.trim();
@@ -208,6 +327,9 @@ salvaNegozio.addEventListener(
 
       messaggioNegozio.textContent =
         "Inserisci almeno nome e città.";
+
+      messaggioNegozio.className =
+        "error-message";
 
       return;
 
@@ -239,7 +361,7 @@ salvaNegozio.addEventListener(
 
     localStorage.setItem(
       "ultimoPuntoVendita",
-      id
+      String(id)
     );
 
 
@@ -252,6 +374,9 @@ salvaNegozio.addEventListener(
     messaggioNegozio.textContent =
       "✓ Punto vendita salvato";
 
+    messaggioNegozio.className =
+      "success-message";
+
 
     await caricaPuntiVendita();
 
@@ -259,7 +384,9 @@ salvaNegozio.addEventListener(
 );
 
 
-/* SELEZIONE NEGOZIO */
+/* =========================================
+   SELEZIONE PUNTO VENDITA
+========================================= */
 
 puntoVenditaSelect.addEventListener(
   "change",
@@ -267,6 +394,7 @@ puntoVenditaSelect.addEventListener(
 
     const id =
       puntoVenditaSelect.value;
+
 
     if (id) {
 
@@ -283,6 +411,7 @@ puntoVenditaSelect.addEventListener(
 
     }
 
+
     mostraNegozioSelezionato();
 
   }
@@ -295,6 +424,7 @@ function mostraNegozioSelezionato() {
     puntoVenditaSelect.options[
       puntoVenditaSelect.selectedIndex
     ];
+
 
   if (
     puntoVenditaSelect.value &&
@@ -313,44 +443,11 @@ function mostraNegozioSelezionato() {
   }
 
 }
-/* ========================================
-   PRODOTTI E RILEVAZIONI PREZZI
-======================================== */
-
-const nomeProdotto =
-  document.getElementById("nomeProdotto");
-
-const prezzoProdotto =
-  document.getElementById("prezzoProdotto");
-
-const quantitaProdotto =
-  document.getElementById("quantitaProdotto");
-
-const unitaProdotto =
-  document.getElementById("unitaProdotto");
-
-const notaPrezzo =
-  document.getElementById("notaPrezzo");
-
-const promozionePrezzo =
-  document.getElementById("promozionePrezzo");
-
-const salvaPrezzo =
-  document.getElementById("salvaPrezzo");
-
-const messaggioPrezzo =
-  document.getElementById("messaggioPrezzo");
 
 
-function normalizzaTesto(testo) {
-
-  return testo
-    .trim()
-    .toLowerCase()
-    .replace(/\s+/g, " ");
-
-}
-
+/* =========================================
+   PREZZO UNITARIO
+========================================= */
 
 function calcolaPrezzoUnitario(
   prezzo,
@@ -361,52 +458,69 @@ function calcolaPrezzoUnitario(
   if (unita === "g") {
 
     return {
-      valore: prezzo * 1000 / quantita,
+      valore:
+        prezzo * 1000 / quantita,
       unita: "kg"
     };
 
   }
+
 
   if (unita === "kg") {
 
     return {
-      valore: prezzo / quantita,
+      valore:
+        prezzo / quantita,
       unita: "kg"
     };
 
   }
 
+
   if (unita === "ml") {
 
     return {
-      valore: prezzo * 1000 / quantita,
+      valore:
+        prezzo * 1000 / quantita,
       unita: "l"
     };
 
   }
+
 
   if (unita === "l") {
 
     return {
-      valore: prezzo / quantita,
+      valore:
+        prezzo / quantita,
       unita: "l"
     };
 
   }
 
+
   if (unita === "pezzi") {
 
     return {
-      valore: prezzo / quantita,
+      valore:
+        prezzo / quantita,
       unita: "pezzo"
     };
 
   }
 
+
+  return {
+    valore: prezzo,
+    unita: ""
+  };
+
 }
 
 
-/* SALVA PREZZO */
+/* =========================================
+   SALVA PREZZO
+========================================= */
 
 salvaPrezzo.addEventListener(
   "click",
@@ -414,20 +528,27 @@ salvaPrezzo.addEventListener(
 
     messaggioPrezzo.className = "";
 
+
     const nome =
       nomeProdotto.value.trim();
 
     const prezzo =
-      Number(prezzoProdotto.value);
+      convertiNumero(
+        prezzoProdotto.value
+      );
 
     const quantita =
-      Number(quantitaProdotto.value);
+      convertiNumero(
+        quantitaProdotto.value
+      );
 
     const unita =
       unitaProdotto.value;
 
     const puntoVenditaId =
-      Number(puntoVenditaSelect.value);
+      Number(
+        puntoVenditaSelect.value
+      );
 
 
     /* CONTROLLI */
@@ -458,7 +579,10 @@ salvaPrezzo.addEventListener(
     }
 
 
-    if (!prezzo || prezzo <= 0) {
+    if (
+      Number.isNaN(prezzo) ||
+      prezzo <= 0
+    ) {
 
       messaggioPrezzo.textContent =
         "Inserisci un prezzo valido.";
@@ -471,7 +595,10 @@ salvaPrezzo.addEventListener(
     }
 
 
-    if (!quantita || quantita <= 0) {
+    if (
+      Number.isNaN(quantita) ||
+      quantita <= 0
+    ) {
 
       messaggioPrezzo.textContent =
         "Inserisci una quantità valida.";
@@ -484,25 +611,27 @@ salvaPrezzo.addEventListener(
     }
 
 
-    /* CERCA SE IL PRODOTTO ESISTE */
+    /* CERCA PRODOTTO ESISTENTE */
 
     const prodotti =
       await PrezziDB.leggiTutti(
         "prodotti"
       );
 
+
     const nomeNormalizzato =
       normalizzaTesto(nome);
 
+
     let prodotto =
       prodotti.find(
-        p =>
-          p.nomeNormalizzato ===
+        prodotto =>
+          prodotto.nomeNormalizzato ===
           nomeNormalizzato
       );
 
 
-    /* SE NON ESISTE, CREALO */
+    /* CREA PRODOTTO SE NON ESISTE */
 
     if (!prodotto) {
 
@@ -527,23 +656,29 @@ salvaPrezzo.addEventListener(
 
 
       prodotto = {
+
         ...nuovoProdotto,
+
         id: prodottoId
+
       };
 
     }
 
 
-    /* TROVA IL NEGOZIO */
+    /* RECUPERA NEGOZIO */
 
     const negozi =
       await PrezziDB.leggiTutti(
         "puntiVendita"
       );
 
+
     const negozio =
       negozi.find(
-        n => n.id === puntoVenditaId
+        negozio =>
+          negozio.id ===
+          puntoVenditaId
       );
 
 
@@ -560,7 +695,7 @@ salvaPrezzo.addEventListener(
     }
 
 
-    /* CALCOLO PREZZO KG / LITRO / PEZZO */
+    /* CALCOLA €/KG, €/L O €/PEZZO */
 
     const prezzoUnitario =
       calcolaPrezzoUnitario(
@@ -623,25 +758,27 @@ salvaPrezzo.addEventListener(
 
     /* CONFERMA */
 
-    let messaggio =
-      `✓ ${nome} salvato a €${prezzo.toFixed(2)}`;
+    const prezzoItaliano =
+      prezzo.toFixed(2)
+        .replace(".", ",");
 
-    messaggio +=
-      ` — ${quantita} ${unita}`;
-
-    messaggio +=
-      ` — €${prezzoUnitario.valore.toFixed(2)}/${prezzoUnitario.unita}`;
+    const prezzoUnitarioItaliano =
+      prezzoUnitario.valore
+        .toFixed(2)
+        .replace(".", ",");
 
 
     messaggioPrezzo.textContent =
-      messaggio;
+      `✓ ${nome} salvato a €${prezzoItaliano} — ` +
+      `${quantita} ${unita} — ` +
+      `€${prezzoUnitarioItaliano}/${prezzoUnitario.unita}`;
+
 
     messaggioPrezzo.className =
       "success-message";
 
 
-    /* PULISCE IL PRODOTTO,
-       MA NON IL SUPERMERCATO */
+    /* PULISCE SOLO I DATI PRODOTTO */
 
     nomeProdotto.value = "";
 
@@ -652,6 +789,7 @@ salvaPrezzo.addEventListener(
     notaPrezzo.value = "";
 
     promozionePrezzo.checked = false;
+
 
     nomeProdotto.focus();
 
