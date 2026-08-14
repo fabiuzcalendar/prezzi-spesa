@@ -847,6 +847,251 @@ function completaPrezzoUnitario(rilevazione) {
   );
 }
 
+function trovaMiglioriPrezzi(rilevazioni) {
+  const migliori = new Map();
+
+  rilevazioni.forEach(rilevazione => {
+    const unitario =
+      completaPrezzoUnitario(
+        rilevazione
+      );
+
+    if (
+      !Number.isFinite(unitario.valore) ||
+      !unitario.unita
+    ) {
+      return;
+    }
+
+    const chiave =
+      unitario.unita;
+
+    const miglioreAttuale =
+      migliori.get(chiave);
+
+    if (
+      miglioreAttuale === undefined ||
+      unitario.valore < miglioreAttuale
+    ) {
+      migliori.set(
+        chiave,
+        unitario.valore
+      );
+    }
+  });
+
+  return migliori;
+}
+
+function ePrezzoMigliore(
+  rilevazione,
+  migliori
+) {
+  const unitario =
+    completaPrezzoUnitario(
+      rilevazione
+    );
+
+  const migliore =
+    migliori.get(unitario.unita);
+
+  if (
+    migliore === undefined ||
+    !Number.isFinite(unitario.valore)
+  ) {
+    return false;
+  }
+
+  return Math.abs(
+    unitario.valore - migliore
+  ) < 0.001;
+}
+
+async function preparaAggiornamentoPrezzo(
+  rilevazione
+) {
+  mostraSezione(aggiungiSection);
+
+  await caricaPuntiVendita();
+
+  puntoVenditaSelect.value =
+    String(
+      rilevazione.puntoVenditaId
+    );
+
+  localStorage.setItem(
+    "ultimoPuntoVendita",
+    String(
+      rilevazione.puntoVenditaId
+    )
+  );
+
+  mostraNegozioSelezionato();
+
+  nomeProdotto.value =
+    rilevazione.nomeProdotto || "";
+
+  prezzoProdotto.value = "";
+
+  quantitaProdotto.value =
+    rilevazione.quantita ?? "";
+
+  unitaProdotto.value =
+    rilevazione.unita || "g";
+
+  notaPrezzo.value = "";
+  promozionePrezzo.checked = false;
+  messaggioPrezzo.textContent = "";
+  messaggioPrezzo.className = "";
+
+  prezzoProdotto.focus();
+}
+
+async function mostraNascondiStorico(
+  rilevazione,
+  contenitore,
+  pulsante
+) {
+  const visibile =
+    !contenitore.classList.contains(
+      "hidden"
+    );
+
+  if (visibile) {
+    contenitore.classList.add(
+      "hidden"
+    );
+
+    pulsante.textContent =
+      "Storico prezzi";
+
+    return;
+  }
+
+  contenitore.innerHTML =
+    '<p class="storico-caricamento">Caricamento storico...</p>';
+
+  contenitore.classList.remove(
+    "hidden"
+  );
+
+  pulsante.textContent =
+    "Nascondi storico";
+
+  try {
+    const tutte =
+      await PrezziDB.leggiTutti(
+        "rilevazioniPrezzi"
+      );
+
+    const storico =
+      tutte
+        .filter(elemento =>
+          elemento.prodottoId ===
+            rilevazione.prodottoId &&
+          elemento.puntoVenditaId ===
+            rilevazione.puntoVenditaId
+        )
+        .sort((a, b) =>
+          new Date(
+            b.dataRilevazione
+          ).getTime() -
+          new Date(
+            a.dataRilevazione
+          ).getTime()
+        );
+
+    contenitore.innerHTML = "";
+
+    if (storico.length === 0) {
+      contenitore.textContent =
+        "Nessuna rilevazione precedente.";
+      return;
+    }
+
+    const titolo =
+      document.createElement("p");
+
+    titolo.className =
+      "storico-titolo";
+
+    titolo.textContent =
+      storico.length === 1
+        ? "1 rilevazione salvata"
+        : `${storico.length} rilevazioni salvate`;
+
+    contenitore.appendChild(titolo);
+
+    storico.forEach(elemento => {
+      const riga =
+        document.createElement("div");
+
+      riga.className =
+        "storico-riga";
+
+      const sinistra =
+        document.createElement("div");
+
+      const data =
+        document.createElement("div");
+
+      data.className =
+        "storico-data";
+
+      data.textContent =
+        formattaData(
+          elemento.dataRilevazione
+        );
+
+      const quantita =
+        document.createElement("div");
+
+      quantita.className =
+        "storico-quantita";
+
+      quantita.textContent =
+        `${formattaNumero(elemento.quantita)} ` +
+        `${formattaUnitaConfezione(elemento.unita)}`;
+
+      sinistra.appendChild(data);
+      sinistra.appendChild(quantita);
+
+      const destra =
+        document.createElement("div");
+
+      destra.className =
+        "storico-prezzo";
+
+      destra.textContent =
+        formattaEuro(
+          elemento.prezzo
+        );
+
+      if (elemento.promozione) {
+        const promo =
+          document.createElement("span");
+
+        promo.className =
+          "storico-promo";
+
+        promo.textContent =
+          "PROMO";
+
+        destra.appendChild(promo);
+      }
+
+      riga.appendChild(sinistra);
+      riga.appendChild(destra);
+      contenitore.appendChild(riga);
+    });
+  } catch (error) {
+    console.error(error);
+
+    contenitore.textContent =
+      "Errore durante il caricamento dello storico.";
+  }
+}
+
 function tieniSoloUltimaRilevazionePerNegozio(rilevazioni) {
   const mappa =
     new Map();
@@ -942,7 +1187,10 @@ function ordinaRilevazioni(rilevazioni) {
     });
 }
 
-function creaRisultatoPrezzo(rilevazione) {
+function creaRisultatoPrezzo(
+  rilevazione,
+  migliore = false
+) {
   const giorni =
     giorniDallaRilevazione(
       rilevazione.dataRilevazione
@@ -991,6 +1239,21 @@ function creaRisultatoPrezzo(rilevazione) {
       "PROMO";
 
     intestazione.appendChild(promo);
+  }
+
+  if (migliore) {
+    const badgeMigliore =
+      document.createElement("span");
+
+    badgeMigliore.className =
+      "badge-migliore";
+
+    badgeMigliore.textContent =
+      "PIÙ CONVENIENTE";
+
+    intestazione.appendChild(
+      badgeMigliore
+    );
   }
 
   card.appendChild(intestazione);
@@ -1102,6 +1365,62 @@ function creaRisultatoPrezzo(rilevazione) {
     card.appendChild(nota);
   }
 
+  const azioni =
+    document.createElement("div");
+
+  azioni.className =
+    "risultato-azioni";
+
+  const storicoButton =
+    document.createElement("button");
+
+  storicoButton.type = "button";
+  storicoButton.className =
+    "secondary-button";
+  storicoButton.textContent =
+    "Storico prezzi";
+
+  const aggiornaButton =
+    document.createElement("button");
+
+  aggiornaButton.type = "button";
+  aggiornaButton.className =
+    "primary-small-button";
+  aggiornaButton.textContent =
+    "Aggiorna prezzo";
+
+  azioni.appendChild(storicoButton);
+  azioni.appendChild(aggiornaButton);
+  card.appendChild(azioni);
+
+  const storicoContenitore =
+    document.createElement("div");
+
+  storicoContenitore.className =
+    "storico-prezzi hidden";
+
+  card.appendChild(
+    storicoContenitore
+  );
+
+  storicoButton.addEventListener(
+    "click",
+    () =>
+      mostraNascondiStorico(
+        rilevazione,
+        storicoContenitore,
+        storicoButton
+      )
+  );
+
+  aggiornaButton.addEventListener(
+    "click",
+    () =>
+      preparaAggiornamentoPrezzo(
+        rilevazione
+      )
+  );
+
   return card;
 }
 
@@ -1183,10 +1502,17 @@ async function eseguiRicercaPrezzi() {
       ? "1 prezzo trovato."
       : `${ordinate.length} prezzi trovati.`;
 
+  const migliori =
+    trovaMiglioriPrezzi(ordinate);
+
   ordinate.forEach(rilevazione => {
     risultatiPrezzi.appendChild(
       creaRisultatoPrezzo(
-        rilevazione
+        rilevazione,
+        ePrezzoMigliore(
+          rilevazione,
+          migliori
+        )
       )
     );
   });
@@ -1201,4 +1527,3 @@ ordinaRisultati.addEventListener(
   "change",
   eseguiRicercaPrezzi
 );
-
