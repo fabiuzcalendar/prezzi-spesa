@@ -1,4 +1,4 @@
-const CACHE_NAME = "prezzi-spesa-v6";
+const CACHE_NAME = "prezzi-spesa-v7";
 
 const FILES_TO_CACHE = [
   "./",
