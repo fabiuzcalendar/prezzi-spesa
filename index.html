@@ -2,59 +2,58 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#ffffff">
   <title>Prezzi Spesa</title>
-
   <link rel="manifest" href="./manifest.json">
   <link rel="stylesheet" href="./style.css">
 </head>
-
 <body>
 
-  <!-- HOME -->
   <section id="homeSection">
-
     <header>
       <h1>Prezzi Spesa</h1>
       <p>Confronta i prezzi e organizza la tua spesa</p>
     </header>
 
     <main>
-      <button class="home-button" data-action="cerca">
-        🔎
-        <span>Cerca prezzi</span>
+      <button class="home-button" data-action="cerca" type="button">
+        <span class="home-icon">🔎</span>
+        <span class="home-label">Cerca prezzi</span>
       </button>
 
-      <button class="home-button" data-action="aggiungi">
-        ➕
-        <span>Aggiungi prezzo</span>
+      <button class="home-button" data-action="aggiungi" type="button">
+        <span class="home-icon">➕</span>
+        <span class="home-label">Aggiungi prezzo</span>
       </button>
 
-      <button class="home-button" data-action="lista">
-        🛒
-        <span>Lista della spesa</span>
+      <button class="home-button" data-action="lista" type="button">
+        <span class="home-icon">🛒</span>
+        <span class="home-label">Lista della spesa</span>
+        <span id="badgeListaHome" class="home-badge hidden"></span>
       </button>
 
-      <button class="home-button" data-action="aggiorna">
-        🕒
-        <span>Prezzi da aggiornare</span>
+      <button class="home-button" data-action="aggiorna" type="button">
+        <span class="home-icon">🕒</span>
+        <span class="home-label">Prezzi da aggiornare</span>
+        <span id="badgeAggiornamentiHome" class="home-badge hidden"></span>
       </button>
 
-      <p id="status">Caricamento...</p>
+      <button class="home-button" data-action="dati" type="button">
+        <span class="home-icon">💾</span>
+        <span class="home-label">Backup e dati</span>
+      </button>
+
+      <div class="home-status-card">
+        <p id="status">Caricamento archivio...</p>
+        <p id="homeRiepilogo" class="home-riepilogo"></p>
+      </div>
     </main>
-
   </section>
 
-
-  <!-- CERCA PREZZI -->
   <section id="cercaSection" class="pagina hidden">
-
     <header class="pagina-header">
-      <button id="tornaHomeCerca" class="back-button" aria-label="Torna alla home">
-        ←
-      </button>
-
+      <button class="back-button torna-home" type="button" aria-label="Torna alla home">←</button>
       <div>
         <h1>Cerca prezzi</h1>
         <p>Trova il prezzo più conveniente</p>
@@ -62,382 +61,271 @@
     </header>
 
     <main>
-
       <div class="card">
         <h2>Cerca prodotto</h2>
 
-        <label for="cercaProdotto">
-          Nome prodotto
-        </label>
-
-        <input
-          id="cercaProdotto"
-          type="search"
-          placeholder="Es. Nutella"
-          autocomplete="off"
-          list="suggerimentiProdotti"
-        >
-
+        <label for="cercaProdotto">Nome prodotto</label>
+        <input id="cercaProdotto" type="search" placeholder="Es. Nutella" autocomplete="off" list="suggerimentiProdotti">
         <datalist id="suggerimentiProdotti"></datalist>
 
         <div class="azioni-ricerca-rapida">
-          <button
-            id="mostraTuttiPrezzi"
-            class="secondary-button"
-            type="button"
-          >
-            Mostra tutti
-          </button>
-
-          <button
-            id="pulisciRicercaPrezzi"
-            class="secondary-button"
-            type="button"
-          >
-            Pulisci ricerca
-          </button>
+          <button id="mostraTuttiPrezzi" class="secondary-button" type="button">Mostra tutti</button>
+          <button id="pulisciRicercaPrezzi" class="secondary-button" type="button">Pulisci ricerca</button>
         </div>
 
         <div id="ricercheRecenti" class="ricerche-recenti hidden">
-          <p class="ricerche-recenti-titolo">Ricerche recenti</p>
-          <div id="ricercheRecentiLista" class="ricerche-recenti-lista"></div>
+          <p class="mini-title">Ricerche recenti</p>
+          <div id="ricercheRecentiLista" class="chip-list"></div>
         </div>
 
-        <label for="filtroPuntoVendita">
-          Punto vendita
-        </label>
-
+        <label for="filtroPuntoVendita">Punto vendita</label>
         <select id="filtroPuntoVendita">
           <option value="">Tutti i punti vendita</option>
         </select>
 
         <div class="filtri-cerca">
-          <label class="checkbox-label filtro-checkbox">
-            <input
-              id="filtroPromozioni"
-              type="checkbox"
-            >
-            Solo promozioni
+          <label class="checkbox-box">
+            <input id="filtroPromozioni" type="checkbox">
+            <span>Solo promozioni</span>
           </label>
-
-          <label class="checkbox-label filtro-checkbox">
-            <input
-              id="filtroRecenti"
-              type="checkbox"
-            >
-            Solo prezzi fino a 14 giorni
+          <label class="checkbox-box">
+            <input id="filtroRecenti" type="checkbox">
+            <span>Solo prezzi fino a 14 giorni</span>
           </label>
         </div>
 
-        <button
-          id="azzeraFiltriCerca"
-          class="secondary-button reset-filtri-button"
-          type="button"
-        >
-          Azzera filtri
-        </button>
+        <button id="azzeraFiltriCerca" class="secondary-button full-button" type="button">Azzera filtri</button>
 
-        <label for="ordinaRisultati">
-          Ordina risultati
-        </label>
-
+        <label for="ordinaRisultati">Ordina risultati</label>
         <select id="ordinaRisultati">
           <option value="unitario">Più conveniente per kg / L / pezzo</option>
           <option value="prezzo">Prezzo confezione più basso</option>
           <option value="recente">Rilevazione più recente</option>
         </select>
 
-        <p id="conteggioRisultati" class="info-text">
-          Scrivi il nome di un prodotto per iniziare.
-        </p>
-
-        <p id="riepilogoRicerca" class="riepilogo-ricerca hidden"></p>
+        <p id="conteggioRisultati" class="info-text">Scrivi il nome di un prodotto per iniziare.</p>
+        <p id="riepilogoRicerca" class="riepilogo-box hidden"></p>
       </div>
 
-      <div id="risultatiPrezzi"></div>
+      <div id="risultatiPrezzi" class="results-list"></div>
 
       <div class="card legenda-card">
         <h2>Età del prezzo</h2>
-
-        <div class="legenda-riga">
-          <span class="legenda-colore stato-verde"></span>
-          <span>Verde: da oggi a 7 giorni</span>
-        </div>
-
-        <div class="legenda-riga">
-          <span class="legenda-colore stato-giallo"></span>
-          <span>Giallo: da 8 a 14 giorni</span>
-        </div>
-
-        <div class="legenda-riga">
-          <span class="legenda-colore stato-arancione"></span>
-          <span>Arancione: da 15 a 29 giorni</span>
-        </div>
-
-        <div class="legenda-riga">
-          <span class="legenda-colore stato-rosso"></span>
-          <span>Rosso: 30 giorni o più</span>
-        </div>
+        <div class="legenda-riga"><span class="legenda-colore verde"></span><span>Verde: da oggi a 7 giorni</span></div>
+        <div class="legenda-riga"><span class="legenda-colore giallo"></span><span>Giallo: da 8 a 14 giorni</span></div>
+        <div class="legenda-riga"><span class="legenda-colore arancione"></span><span>Arancione: da 15 a 29 giorni</span></div>
+        <div class="legenda-riga"><span class="legenda-colore rosso"></span><span>Rosso: 30 giorni o più</span></div>
       </div>
-
     </main>
-
   </section>
 
-
-  <!-- LISTA DELLA SPESA -->
-  <section id="listaSection" class="pagina hidden">
-
+  <section id="aggiungiSection" class="pagina hidden">
     <header class="pagina-header">
-      <button id="tornaHomeLista" class="back-button" aria-label="Torna alla home">
-        ←
-      </button>
-
+      <button class="back-button torna-home" type="button" aria-label="Torna alla home">←</button>
       <div>
-        <h1>Lista della spesa</h1>
-        <p>Scrivi, spunta e porta con te la lista</p>
+        <h1>Aggiungi prezzo</h1>
+        <p>Inserisci rapidamente un nuovo prezzo</p>
       </div>
     </header>
 
     <main>
+      <div class="card">
+        <h2>Punto vendita</h2>
+        <label for="puntoVenditaSelect">Punto vendita salvato</label>
+        <select id="puntoVenditaSelect">
+          <option value="">Seleziona un punto vendita</option>
+        </select>
+        <p id="negozioSelezionato" class="info-text">Nessun punto vendita selezionato</p>
+      </div>
+
+      <details class="card details-card">
+        <summary>Nuovo punto vendita</summary>
+        <div class="details-content">
+          <label for="nomeNegozio">Nome / Catena</label>
+          <input id="nomeNegozio" type="text" placeholder="Es. Conad" autocomplete="organization">
+
+          <label for="cittaNegozio">Città</label>
+          <input id="cittaNegozio" type="text" placeholder="Es. Modena" autocomplete="address-level2">
+
+          <label for="viaNegozio">Via (facoltativa)</label>
+          <input id="viaNegozio" type="text" placeholder="Es. Via Emilia" autocomplete="street-address">
+
+          <label for="notaNegozio">Nota (facoltativa)</label>
+          <textarea id="notaNegozio" placeholder="Eventuale nota"></textarea>
+
+          <button id="salvaNegozio" class="primary-button" type="button">Salva punto vendita</button>
+          <p id="messaggioNegozio" class="message"></p>
+        </div>
+      </details>
 
       <div class="card">
-        <h2>Aggiungi prodotti</h2>
+        <h2>Prodotto e prezzo</h2>
 
-        <label for="listaRapidaInput">
-          Cosa devi comprare?
+        <label for="nomeProdotto">Nome prodotto</label>
+        <input id="nomeProdotto" type="text" placeholder="Es. Nutella" autocomplete="off" list="suggerimentiProdotti">
+
+        <div class="form-grid two-cols">
+          <div>
+            <label for="prezzoProdotto">Prezzo €</label>
+            <input id="prezzoProdotto" type="text" inputmode="decimal" placeholder="Es. 5,29">
+          </div>
+          <div>
+            <label for="quantitaProdotto">Quantità confezione</label>
+            <input id="quantitaProdotto" type="text" inputmode="decimal" placeholder="Es. 750">
+          </div>
+        </div>
+
+        <label for="unitaProdotto">Unità di misura</label>
+        <select id="unitaProdotto">
+          <option value="g">grammi (g)</option>
+          <option value="kg">chilogrammi (kg)</option>
+          <option value="ml">millilitri (ml)</option>
+          <option value="l">litri (L)</option>
+          <option value="pezzi">pezzi</option>
+        </select>
+
+        <label for="notaPrezzo">Nota (facoltativa)</label>
+        <textarea id="notaPrezzo" placeholder="Es. prezzo con tessera, offerta..."></textarea>
+
+        <label class="checkbox-box checkbox-inline">
+          <input id="promozionePrezzo" type="checkbox">
+          <span>Prezzo in promozione</span>
         </label>
 
-        <textarea
-          id="listaRapidaInput"
-          placeholder="Es. Latte\nPasta\nCaffè"
-        ></textarea>
+        <button id="salvaPrezzo" class="primary-button" type="button">Salva prezzo</button>
+        <p id="messaggioPrezzo" class="message"></p>
+      </div>
+    </main>
+  </section>
 
-        <p class="info-text lista-aiuto">
-          Puoi scrivere anche più prodotti, uno per riga.
-        </p>
+  <section id="listaSection" class="pagina hidden">
+    <header class="pagina-header">
+      <button class="back-button torna-home" type="button" aria-label="Torna alla home">←</button>
+      <div>
+        <h1>Lista della spesa</h1>
+        <p>Lista rapida con stima automatica dei prezzi</p>
+      </div>
+    </header>
 
-        <button id="aggiungiAllaLista" class="primary-button" type="button">
-          Aggiungi alla lista
-        </button>
+    <main>
+      <div class="card">
+        <h2>Lista rapida</h2>
+        <label for="listaRapidaInput">Cosa devi comprare?</label>
+        <textarea id="listaRapidaInput" placeholder="Es. Latte\nPasta\nCaffè"></textarea>
+        <p class="info-text small-text">Puoi scrivere più prodotti, uno per riga. Se il nome coincide con un prodotto salvato, l'app collega automaticamente il prezzo.</p>
+        <button id="aggiungiAllaLista" class="primary-button" type="button">Aggiungi alla lista</button>
+        <p id="messaggioLista" class="message"></p>
+      </div>
 
-        <p id="messaggioLista"></p>
+      <div class="card">
+        <h2>Aggiungi dall'archivio prezzi</h2>
+        <label for="listaProdottoArchivio">Prodotto salvato</label>
+        <input id="listaProdottoArchivio" type="text" placeholder="Cerca un prodotto già registrato" autocomplete="off" list="suggerimentiProdotti">
+
+        <label for="listaQuantitaConfezioni">Numero confezioni</label>
+        <input id="listaQuantitaConfezioni" type="number" min="1" max="99" step="1" value="1">
+
+        <button id="aggiungiArchivioLista" class="secondary-strong-button" type="button">Aggiungi prodotto salvato</button>
+        <p id="messaggioListaArchivio" class="message"></p>
+      </div>
+
+      <div id="riepilogoListaCard" class="card stima-card hidden">
+        <h2>Stima della spesa</h2>
+        <div class="stima-totale-row">
+          <span>Totale minimo teorico</span>
+          <strong id="stimaTotaleLista">€0,00</strong>
+        </div>
+        <p id="stimaCoperturaLista" class="info-text small-text"></p>
+        <p class="info-text small-text">La stima usa, per ogni prodotto, la rilevazione più recente di ogni punto vendita e sceglie la confezione col prezzo più basso. I prodotti spuntati non vengono conteggiati.</p>
       </div>
 
       <div class="card lista-card">
         <div class="lista-intestazione">
           <div>
             <h2>La mia lista</h2>
-            <p id="conteggioLista" class="info-text lista-conteggio">
-              Lista vuota
-            </p>
+            <p id="conteggioLista" class="info-text small-text">Lista vuota</p>
           </div>
-
-          <button id="eliminaSpuntati" class="secondary-button lista-small-button" type="button">
-            Elimina spuntati
-          </button>
+          <button id="eliminaSpuntati" class="secondary-button compact-button" type="button">Elimina spuntati</button>
         </div>
 
         <div id="listaSpesaElementi" class="lista-spesa-elementi"></div>
-
-        <p id="listaVuota" class="lista-vuota">
-          Non hai ancora aggiunto prodotti.
-        </p>
-
-        <button id="svuotaLista" class="danger-outline-button hidden" type="button">
-          Svuota tutta la lista
-        </button>
+        <p id="listaVuota" class="empty-box">Non hai ancora aggiunto prodotti.</p>
+        <button id="svuotaLista" class="danger-outline-button hidden" type="button">Svuota tutta la lista</button>
       </div>
-
     </main>
-
   </section>
 
-
-  <!-- AGGIUNGI PREZZO -->
-  <section id="aggiungiSection" class="pagina hidden">
-
+  <section id="aggiornaSection" class="pagina hidden">
     <header class="pagina-header">
-
-      <button id="tornaHome" class="back-button" aria-label="Torna alla home">
-        ←
-      </button>
-
+      <button class="back-button torna-home" type="button" aria-label="Torna alla home">←</button>
       <div>
-        <h1>Aggiungi prezzo</h1>
-        <p>Inserisci rapidamente un nuovo prezzo</p>
+        <h1>Prezzi da aggiornare</h1>
+        <p>Controlla le rilevazioni diventate vecchie</p>
       </div>
-
     </header>
 
-
     <main>
-
-      <!-- PUNTO VENDITA -->
       <div class="card">
-
-        <h2>Punto vendita</h2>
-
-        <label for="puntoVenditaSelect">
-          Punto vendita salvato
-        </label>
-
-        <select id="puntoVenditaSelect">
-          <option value="">
-            Seleziona un punto vendita
-          </option>
+        <label for="sogliaAggiornamenti">Mostra prezzi più vecchi di</label>
+        <select id="sogliaAggiornamenti">
+          <option value="14">14 giorni</option>
+          <option value="29">29 giorni</option>
+          <option value="59">59 giorni</option>
         </select>
 
-        <p id="negozioSelezionato" class="info-text">
-          Nessun punto vendita selezionato
-        </p>
-
-      </div>
-
-
-      <!-- NUOVO PUNTO VENDITA -->
-      <div class="card">
-
-        <h2>Nuovo punto vendita</h2>
-
-        <label for="nomeNegozio">
-          Nome / Catena
-        </label>
-
-        <input
-          id="nomeNegozio"
-          type="text"
-          placeholder="Es. Conad"
-        >
-
-
-        <label for="cittaNegozio">
-          Città
-        </label>
-
-        <input
-          id="cittaNegozio"
-          type="text"
-          placeholder="Es. Modena"
-        >
-
-
-        <label for="viaNegozio">
-          Via (facoltativa)
-        </label>
-
-        <input
-          id="viaNegozio"
-          type="text"
-          placeholder="Es. Via Emilia"
-        >
-
-
-        <label for="notaNegozio">
-          Nota (facoltativa)
-        </label>
-
-        <textarea
-          id="notaNegozio"
-          placeholder="Eventuale nota"
-        ></textarea>
-
-
-        <button id="salvaNegozio" class="primary-button">
-          Salva punto vendita
-        </button>
-
-        <p id="messaggioNegozio"></p>
-
-      </div>
-
-
-      <!-- PRODOTTO E PREZZO -->
-      <div class="card">
-
-        <h2>Prodotto e prezzo</h2>
-
-        <label for="nomeProdotto">
-          Nome prodotto
-        </label>
-
-        <input
-          id="nomeProdotto"
-          type="text"
-          placeholder="Es. Nutella"
-        >
-
-
-        <label for="prezzoProdotto">
-          Prezzo €
-        </label>
-
-        <input
-          id="prezzoProdotto"
-          type="text"
-          inputmode="decimal"
-          placeholder="Es. 5,29"
-        >
-
-
-        <label for="quantitaProdotto">
-          Quantità confezione
-        </label>
-
-        <input
-          id="quantitaProdotto"
-          type="text"
-          inputmode="decimal"
-          placeholder="Es. 750"
-        >
-
-
-        <label for="unitaProdotto">
-          Unità di misura
-        </label>
-
-        <select id="unitaProdotto">
-          <option value="g">grammi (g)</option>
-          <option value="kg">chilogrammi (kg)</option>
-          <option value="ml">millilitri (ml)</option>
-          <option value="l">litri (l)</option>
-          <option value="pezzi">pezzi</option>
+        <label for="filtroAggiornamentiNegozio">Punto vendita</label>
+        <select id="filtroAggiornamentiNegozio">
+          <option value="">Tutti i punti vendita</option>
         </select>
 
-
-        <label for="notaPrezzo">
-          Nota (facoltativa)
-        </label>
-
-        <textarea
-          id="notaPrezzo"
-          placeholder="Es. prezzo con tessera, offerta..."
-        ></textarea>
-
-        <label class="checkbox-label">
-          <input
-            id="promozionePrezzo"
-            type="checkbox"
-          >
-          Prezzo in promozione
-        </label>
-
-
-        <button id="salvaPrezzo" class="primary-button">
-          Salva prezzo
-        </button>
-
-        <p id="messaggioPrezzo"></p>
-
+        <p id="conteggioAggiornamenti" class="info-text"></p>
       </div>
 
+      <div id="listaAggiornamenti" class="results-list"></div>
     </main>
-
   </section>
 
+  <section id="datiSection" class="pagina hidden">
+    <header class="pagina-header">
+      <button class="back-button torna-home" type="button" aria-label="Torna alla home">←</button>
+      <div>
+        <h1>Backup e dati</h1>
+        <p>Proteggi l'archivio salvato sul dispositivo</p>
+      </div>
+    </header>
+
+    <main>
+      <div class="card">
+        <h2>Archivio attuale</h2>
+        <div id="statisticheArchivio" class="stats-grid"></div>
+      </div>
+
+      <div class="card">
+        <h2>Esporta backup</h2>
+        <p class="info-text">Crea un file JSON con punti vendita, prodotti, tutte le rilevazioni, lista della spesa e preferenze principali.</p>
+        <button id="esportaBackup" class="primary-button" type="button">Scarica backup completo</button>
+        <p id="messaggioBackup" class="message"></p>
+      </div>
+
+      <div class="card warning-card">
+        <h2>Ripristina backup</h2>
+        <p class="info-text">Il ripristino sostituisce l'archivio presente sul dispositivo con quello contenuto nel file scelto.</p>
+        <label for="importaBackupFile">File backup .json</label>
+        <input id="importaBackupFile" type="file" accept="application/json,.json">
+        <button id="importaBackup" class="secondary-strong-button" type="button">Ripristina dal file</button>
+        <p id="messaggioImport" class="message"></p>
+      </div>
+
+      <div class="card info-card">
+        <h2>Nota importante</h2>
+        <p class="info-text">I prezzi sono salvati localmente nel browser/PWA. Fai ogni tanto un backup, soprattutto prima di cancellare dati del browser, cambiare telefono o reinstallare l'app.</p>
+      </div>
+    </main>
+  </section>
+
+  <footer class="app-footer">Prezzi Spesa · versione finale 1.0</footer>
 
   <script src="./db.js"></script>
   <script src="./app.js"></script>
-
 </body>
 </html>
