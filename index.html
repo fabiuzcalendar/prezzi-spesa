@@ -77,6 +77,40 @@
           autocomplete="off"
         >
 
+        <label for="filtroPuntoVendita">
+          Punto vendita
+        </label>
+
+        <select id="filtroPuntoVendita">
+          <option value="">Tutti i punti vendita</option>
+        </select>
+
+        <div class="filtri-cerca">
+          <label class="checkbox-label filtro-checkbox">
+            <input
+              id="filtroPromozioni"
+              type="checkbox"
+            >
+            Solo promozioni
+          </label>
+
+          <label class="checkbox-label filtro-checkbox">
+            <input
+              id="filtroRecenti"
+              type="checkbox"
+            >
+            Solo prezzi fino a 14 giorni
+          </label>
+        </div>
+
+        <button
+          id="azzeraFiltriCerca"
+          class="secondary-button reset-filtri-button"
+          type="button"
+        >
+          Azzera filtri
+        </button>
+
         <label for="ordinaRisultati">
           Ordina risultati
         </label>
